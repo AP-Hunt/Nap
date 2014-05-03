@@ -17,7 +17,7 @@ class ResourceTest extends PHPUnit_Framework_TestCase
     }
     
     /** @test **/
-    public function CreateResource_WithPathPartialRegex()
+    public function CreateResource_WithUriPartialRegex()
     {
         // Arrange
         $pathRegex = "part/of/path/\d+";
@@ -26,7 +26,7 @@ class ResourceTest extends PHPUnit_Framework_TestCase
         $resource = new \Nap\Resource\Resource("MyResource", $pathRegex);
         
         // Assert
-        $this->assertEquals($pathRegex, $resource->getPathPartial());
+        $this->assertEquals($pathRegex, $resource->getUriPartial());
     }
 
     /** @test **/

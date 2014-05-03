@@ -7,8 +7,8 @@ class Resource
     /** @var string $name */
     private $name;
 
-    /** @var string $pathPartial */
-    private $pathPartial;
+    /** @var string $uriPartial */
+    private $uriPartial;
 
     /** @var Resource[] $childResources */
     private $childResources;
@@ -16,10 +16,10 @@ class Resource
     /** @var Resource $parent */
     private $parent;
 
-    public function __construct($name, $pathPartial, $childResources = array())
+    public function __construct($name, $uriPartial, $childResources = array())
     {
         $this->name = $name;
-        $this->pathPartial = $pathPartial;
+        $this->uriPartial = $uriPartial;
         $this->parent = null;
 
         $this->childResources = $childResources;
@@ -33,9 +33,9 @@ class Resource
         return $this->name;
     }
 
-    public function getPathPartial()
+    public function getUriPartial()
     {
-        return $this->pathPartial;
+        return $this->uriPartial;
     }
 
     public function getChildResources()
