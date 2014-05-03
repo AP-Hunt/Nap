@@ -1,0 +1,14 @@
+{
+    "name": "andybursh/nap",
+    "description": "",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Andy Hunt",
+            "email": ""
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "dev-master"
+    }
+}
