@@ -10,4 +10,4 @@ interface ControllerResolutionStrategy
      * @return string
      */
     public function resolve(\Nap\Resource\Resource $resource);
-} 
+}
