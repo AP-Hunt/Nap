@@ -17,13 +17,15 @@ class ConventionResolver implements ControllerResolutionStrategy
      * Resolves a given resource to its controller
      *
      * @param \Nap\Resource\Resource $resource
-     * @return \Nap\Controller\NapControllerInterface
+     * @return string
      */
     public function resolve(\Nap\Resource\Resource $resource)
     {
         $resourceFolderName = $this->resolveFolderNameForResource($resource->getParent());
         $fileName = $resourceFolderName.$resource->getName()."Controller.php";
         $this->fileLoader->loadFile($fileName);
+
+        return $fileName;
     }
 
     private function resolveFolderNameForResource(\Nap\Resource\Resource $resource = null)

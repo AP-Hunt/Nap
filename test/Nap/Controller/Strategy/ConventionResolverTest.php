@@ -31,7 +31,10 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
                     ->with($expectedRelativePath);
 
         // Act
-        $this->resolver->resolve($resource);
+        $path = $this->resolver->resolve($resource);
+
+        // Assert
+        $this->assertEquals($expectedRelativePath, $path);
     }
 
     /** @test **/
@@ -46,9 +49,11 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
             ->method("loadFile")
             ->with($expectedRelativePath);
 
-
         // Act
-        $this->resolver->resolve($child);
+        $path = $this->resolver->resolve($child);
+
+        // Assert
+        $this->assertEquals($expectedRelativePath, $path);
     }
 
     /** @test **/
@@ -69,8 +74,10 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
             ->method("loadFile")
             ->with($expectedRelativePath);
 
-
         // Act
-        $this->resolver->resolve($child);
+        $path = $this->resolver->resolve($child);
+
+        // Assert
+        $this->assertEquals($expectedRelativePath, $path);
     }
-} 
+}

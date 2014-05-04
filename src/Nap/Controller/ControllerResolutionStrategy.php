@@ -7,7 +7,7 @@ interface ControllerResolutionStrategy
      * Resolves a given resource to its controller
      *
      * @param \Nap\Resource\Resource $resource
-     * @return \Nap\Controller\NapControllerInterface
+     * @return string
      */
     public function resolve(\Nap\Resource\Resource $resource);
 } 
