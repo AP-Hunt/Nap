@@ -8,6 +8,9 @@
             "email": ""
         }
     ],
+    "require":{
+        "symfony/http-foundation": "2.5.*@dev"
+    },
     "require-dev": {
         "phpunit/phpunit": "dev-master"
     }
