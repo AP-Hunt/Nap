@@ -43,6 +43,11 @@ class Resource
         return $this->childResources;
     }
 
+    public function hasChildren()
+    {
+        return (count($this->childResources) > 0);
+    }
+
     public function setParent(Resource $parentResource)
     {
         $this->parent = $parentResource;
