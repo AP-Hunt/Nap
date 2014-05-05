@@ -18,6 +18,9 @@ class MatchableUriBuilder implements MatchableUriBuilderInterface
 
         $uris[] = new MatchableUri($uriRegex, $rootResource);
 
+        $parameterisedUris = $this->makeParameterisedUrisForResource($rootResource);
+        $uris = array_merge($uris, $parameterisedUris);
+
         if($rootResource->hasChildren()){
             foreach($rootResource->getChildResources() as $child){
                 $uris = array_merge($uris, $this->buildUrisForResource($child));
@@ -35,6 +38,23 @@ class MatchableUriBuilder implements MatchableUriBuilderInterface
 
         $newPartial = $rootResource->getUriPartial().$uriPartial;
         return $this->prependResourceUriPartsToPartial($rootResource->getParent(), $newPartial);
+    }
+
+    private function makeParameterisedUrisForResource(\Nap\Resource\Resource $resource)
+    {
+        $uriPartialRegex = $resource->getUriPartial();
+        $baseUri = $this->prependResourceUriPartsToPartial($resource->getParent(), $uriPartialRegex);
+
+        $uris = array();
+        foreach($resource->getParameterScheme()->getParameters() as $param){
+            /** @var \Nap\Resource\Parameter\ParameterInterface $param */
+            $paramMatcher = sprintf("/(?P<%s>%s)", $param->getName(), $param->getMatchingExpression());
+            $regex = $this->makeRegexFromPath($baseUri.$paramMatcher);
+
+            $uris[] = new MatchableUri($regex, $resource);
+        }
+
+        return $uris;
     }
 
     private function makeRegexFromPath($path)
