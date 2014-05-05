@@ -16,13 +16,13 @@ class Resource
     /** @var Resource $parent */
     private $parent;
 
-    /** @var \Nap\Resource\Parameter\Scheme */
+    /** @var \Nap\Resource\Parameter\ParameterScheme */
     private $parameterScheme;
 
     public function __construct(
         $name,
         $uriPartial,
-        \Nap\Resource\Parameter\Scheme $parameterScheme = null,
+        \Nap\Resource\Parameter\ParameterScheme $parameterScheme = null,
         $childResources = array()
     ) {
         $this->name = $name;
