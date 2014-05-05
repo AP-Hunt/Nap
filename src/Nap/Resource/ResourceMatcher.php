@@ -18,7 +18,8 @@ class ResourceMatcher
 
         foreach($resourceUris as $resUri){
             if($resUri->matches($uri)){
-                return $resUri->getResource();
+                $matched = new \Nap\Resource\MatchedResource($resUri->getResource(), $resUri->getParameters());
+                return $matched;
             }
         }
 

@@ -39,4 +39,14 @@ class MatchableUri
     {
         return preg_match($this->uriRegex, $uri);
     }
+
+    /**
+     * Gets the values of any parameters defined in the resource's parameter scheme
+     *
+     * @return mixed[]
+     */
+    public function getParameters()
+    {
+        return array();
+    }
 } 
