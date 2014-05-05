@@ -23,7 +23,7 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
     public function WhenResourceHasNoParent_LooksForResourceNamePlusControllerFile()
     {
         // Arrange
-        $resource = new \Nap\Resource\Resource("MyResource", "");
+        $resource = new \Nap\Resource\Resource("MyResource", "", null);
         $expectedRelativePath = str_replace("/", DIRECTORY_SEPARATOR, "/MyResourceController.php");
 
         $this->fileLoader->expects($this->once())
@@ -41,8 +41,8 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
     public function WhenResourceIsChild_LooksForResourceInParentNameFolder()
     {
         // Arrange
-        $child = new \Nap\Resource\Resource("Child", "");
-        $child->setParent(new \Nap\Resource\Resource("Parent", ""));
+        $child = new \Nap\Resource\Resource("Child", "", null);
+        $child->setParent(new \Nap\Resource\Resource("Parent", "", null));
         $expectedRelativePath = str_replace("/", DIRECTORY_SEPARATOR, "/Parent/ChildController.php");
 
         $this->fileLoader->expects($this->once())
@@ -60,12 +60,12 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
     public function WhenResourceIsGrandChild_LooksForResourceInParentFolder_InGrandParentNameFolder()
     {
         // Arrange
-        $grandParent = new \Nap\Resource\Resource("Grandparent", "");
+        $grandParent = new \Nap\Resource\Resource("Grandparent", "", null);
 
-        $parent = new \Nap\Resource\Resource("Parent", "");
+        $parent = new \Nap\Resource\Resource("Parent", "", null);
         $parent->setParent($grandParent);
 
-        $child = new \Nap\Resource\Resource("Child", "");
+        $child = new \Nap\Resource\Resource("Child", "", null);
         $child->setParent($parent);
 
         $expectedRelativePath = str_replace("/", DIRECTORY_SEPARATOR, "/Grandparent/Parent/ChildController.php");

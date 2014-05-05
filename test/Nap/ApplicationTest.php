@@ -19,7 +19,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->app = new \Nap\Application($this->matcher, $this->resolver, $this->builder);
         $this->app->setResources(
             array(
-                new \Nap\Resource\Resource("MyResource", "/my/resource")
+                new \Nap\Resource\Resource("MyResource", "/my/resource", null)
             )
         );
 
@@ -38,7 +38,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->matcher->expects($this->once())
                 ->method("match")
                 ->with($expectedPath)
-                ->will($this->returnValue(new \Nap\Resource\Resource("MyResource", "")));
+                ->will($this->returnValue(new \Nap\Resource\Resource("MyResource", "", null)));
 
         $this->expectBuilderReturnsValidController();
 
@@ -71,7 +71,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function StartResolvesMatchedResource()
     {
         // Arrange
-        $resource = new \Nap\Resource\Resource("Resource", "");
+        $resource = new \Nap\Resource\Resource("Resource", "", null);
         $uri = "/my/resource?query=string";
         $expectedPath = "/my/resource";
 
@@ -94,7 +94,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function StartBuildsResolvedController()
     {
         // Arrange
-        $resource = new \Nap\Resource\Resource("Resource", "");
+        $resource = new \Nap\Resource\Resource("Resource", "", null);
         $controllerPath = "\My\ResourceController.php";
         $expectedPath = "/my/resource";
 
@@ -124,7 +124,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function StartThrowsInvalidControllerExceptionWhenControllerDoesNotImplementInterface()
     {
         // Arrange
-        $resource = new \Nap\Resource\Resource("Resource", "");
+        $resource = new \Nap\Resource\Resource("Resource", "", null);
         $controllerPath = "\My\ResourceController.php";
         $uri = "/my/resource?query=string";
         $expectedPath = "/my/resource";
@@ -152,7 +152,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function StartDispatchesMethodOnController()
     {
         // Arrange
-        $resource = new \Nap\Resource\Resource("Resource", "");
+        $resource = new \Nap\Resource\Resource("Resource", "", null);
         $controllerPath = "\My\ResourceController.php";
         $expectedPath = "/my/resource";
 

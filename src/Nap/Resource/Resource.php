@@ -16,8 +16,15 @@ class Resource
     /** @var Resource $parent */
     private $parent;
 
-    public function __construct($name, $uriPartial, $childResources = array())
-    {
+    /** @var \Nap\Resource\Parameter\Scheme */
+    private $parameterScheme;
+
+    public function __construct(
+        $name,
+        $uriPartial,
+        \Nap\Resource\Parameter\Scheme $parameterScheme = null,
+        $childResources = array()
+    ) {
         $this->name = $name;
         $this->uriPartial = $uriPartial;
         $this->parent = null;
@@ -26,6 +33,8 @@ class Resource
         array_walk($this->childResources, function(Resource $child){
             $child->setParent($this);
         });
+
+        $this->parameterScheme = $parameterScheme ?: new \Nap\Resource\Parameter\Scheme\None();
     }
 
     public function getName()
@@ -56,5 +65,10 @@ class Resource
     public function getParent()
     {
         return $this->parent;
+    }
+
+    public function getParameterScheme()
+    {
+        return $this->parameterScheme;
     }
 }

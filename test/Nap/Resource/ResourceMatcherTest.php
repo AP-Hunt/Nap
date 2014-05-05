@@ -15,7 +15,7 @@ class ResourceMatcherTest extends \PHPUnit_Framework_TestCase
     public function WhenGivenPathWhichCannotBeMatched_ReturnsNull()
     {
         // Arrange
-        $rootResource = new \Nap\Resource\Resource("MyResource", "");
+        $rootResource = new \Nap\Resource\Resource("MyResource", "", null);
         $this->expectPathsFromUriBuilder($rootResource, array());
 
         // Act
@@ -29,7 +29,7 @@ class ResourceMatcherTest extends \PHPUnit_Framework_TestCase
     public function WhenGivenPathWhichCanBeMatched_ReturnsResource()
     {
         // Arrange
-        $rootResource = new \Nap\Resource\Resource("MyResource", "");
+        $rootResource = new \Nap\Resource\Resource("MyResource", "", null);
 
         $uri = "/some/path";
         $matchable = $this->createMockMatchableUri();
@@ -40,7 +40,7 @@ class ResourceMatcherTest extends \PHPUnit_Framework_TestCase
 
         $matchable->expects($this->once())
                 ->method("getResource")
-                ->will($this->returnValue(new \Nap\Resource\Resource("SomeResource", "/some/path")));
+                ->will($this->returnValue(new \Nap\Resource\Resource("SomeResource", "/some/path", null)));
 
         $this->expectPathsFromUriBuilder($rootResource, array($matchable));
 

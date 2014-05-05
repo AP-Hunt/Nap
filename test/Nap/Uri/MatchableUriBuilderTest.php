@@ -6,7 +6,7 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
     public function WhenRootResourceHasNoChildren_GeneratesOneUri()
     {
         // Arrange
-        $root = new \Nap\Resource\Resource("MyResource", "/my/resource");
+        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", null);
         $expectedRegex = "#^/my/resource$#";
         $expectedCount = 1;
 
@@ -24,8 +24,8 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
     public function WhenRootResourceHasOneChild_GeneratesTwoUris()
     {
         // Arrange
-        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", array(
-            new \Nap\Resource\Resource("Child", "/child")
+        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", null, array(
+            new \Nap\Resource\Resource("Child", "/child", null)
         ));
         $expectedRegexs = array(
             "#^/my/resource$#",
@@ -49,9 +49,9 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
     public function WhenRootResourceHasOneGrandChild_GeneratesThreeUris()
     {
         // Arrange
-        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", array(
-            new \Nap\Resource\Resource("Child", "/child", array(
-                new \Nap\Resource\Resource("Grandchild", "/grandchild")
+        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", null, array(
+            new \Nap\Resource\Resource("Child", "/child", null, array(
+                new \Nap\Resource\Resource("Grandchild", "/grandchild", null)
             ))
         ));
         $expectedRegexs = array(
@@ -77,9 +77,9 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
     public function WhenRootResourceHasTwoChildren_GeneratesThreeUris()
     {
         // Arrange
-        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", array(
-            new \Nap\Resource\Resource("Child", "/child"),
-            new \Nap\Resource\Resource("Sibling", "/sibling")
+        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", null, array(
+            new \Nap\Resource\Resource("Child", "/child", null),
+            new \Nap\Resource\Resource("Sibling", "/sibling", null)
         ));
         $expectedRegexs = array(
             "#^/my/resource$#",
