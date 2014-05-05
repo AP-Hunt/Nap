@@ -10,7 +10,7 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
         $expectedRegex = "#^/my/resource$#";
         $expectedCount = 1;
 
-        $builder  = new \Nap\Resource\MatchableUriBuilder();
+        $builder  = new \Nap\Uri\MatchableUriBuilder();
 
         // Act
         $uris = $builder->buildUrisForResource($root);
@@ -33,7 +33,7 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
         );
         $expectedCount = 2;
 
-        $builder  = new \Nap\Resource\MatchableUriBuilder();
+        $builder  = new \Nap\Uri\MatchableUriBuilder();
 
         // Act
         $uris = $builder->buildUrisForResource($root);
@@ -61,7 +61,7 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
         );
         $expectedCount = 3;
 
-        $builder  = new \Nap\Resource\MatchableUriBuilder();
+        $builder  = new \Nap\Uri\MatchableUriBuilder();
 
         // Act
         $uris = $builder->buildUrisForResource($root);
@@ -88,7 +88,7 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
         );
         $expectedCount = 3;
 
-        $builder  = new \Nap\Resource\MatchableUriBuilder();
+        $builder  = new \Nap\Uri\MatchableUriBuilder();
 
         // Act
         $uris = $builder->buildUrisForResource($root);

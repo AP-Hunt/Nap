@@ -7,7 +7,7 @@ class ResourceMatcherTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->matchableResourceUriBuilder = $this->getMock("\Nap\Resource\MatchableUriBuilderInterface");
+        $this->matchableResourceUriBuilder = $this->getMock("\Nap\Uri\MatchableUriBuilderInterface");
         $this->matcher = new \Nap\Resource\ResourceMatcher($this->matchableResourceUriBuilder);
     }
 
@@ -54,7 +54,7 @@ class ResourceMatcherTest extends \PHPUnit_Framework_TestCase
 
     private function createMockMatchableUri()
     {
-        return $this->getMockBuilder("\Nap\Resource\MatchableUri")
+        return $this->getMockBuilder("\Nap\Uri\MatchableUri")
                 ->disableOriginalConstructor()
                 ->getMock();
     }

@@ -4,10 +4,10 @@ namespace Nap\Resource;
 
 class ResourceMatcher
 {
-    /** @var MatchableUriBuilderInterface $uriBuilder*/
+    /** @var \Nap\Uri\MatchableUriBuilderInterface $uriBuilder*/
     private $uriBuilder;
 
-    public function __construct(MatchableUriBuilderInterface $pathBuilder)
+    public function __construct(\Nap\Uri\MatchableUriBuilderInterface $pathBuilder)
     {
         $this->uriBuilder = $pathBuilder;
     }

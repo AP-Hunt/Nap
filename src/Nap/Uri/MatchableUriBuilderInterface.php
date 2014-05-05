@@ -1,5 +1,5 @@
 <?php
-namespace Nap\Resource;
+namespace Nap\Uri;
 
 
 interface MatchableUriBuilderInterface

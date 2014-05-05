@@ -1,5 +1,5 @@
 <?php
-namespace Nap\Resource;
+namespace Nap\Uri;
 
 
 class MatchableUriBuilder implements MatchableUriBuilderInterface
@@ -27,7 +27,7 @@ class MatchableUriBuilder implements MatchableUriBuilderInterface
         return $uris;
     }
 
-    private function prependResourceUriPartsToPartial(Resource $rootResource = null, $uriPartial)
+    private function prependResourceUriPartsToPartial(\Nap\Resource\Resource $rootResource = null, $uriPartial)
     {
         if($rootResource == null){
             return $uriPartial;

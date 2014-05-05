@@ -1,5 +1,5 @@
 <?php
-namespace Nap\Resource;
+namespace Nap\Uri;
 
 class MatchableUri
 {
@@ -9,7 +9,7 @@ class MatchableUri
     /** @var Resource $resource*/
     private $resource;
 
-    public function __construct($uriRegex, Resource $resource)
+    public function __construct($uriRegex, \Nap\Resource\Resource $resource)
     {
         $this->uriRegex = $uriRegex;
         $this->resource = $resource;
