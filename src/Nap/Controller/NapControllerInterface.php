@@ -3,6 +3,7 @@ namespace Nap\Controller;
 
 
 interface NapControllerInterface {
+    public function index(\Symfony\Component\HttpFoundation\Request $request);
     public function get(\Symfony\Component\HttpFoundation\Request $request);
     public function post(\Symfony\Component\HttpFoundation\Request $request);
     public function put(\Symfony\Component\HttpFoundation\Request $request);
