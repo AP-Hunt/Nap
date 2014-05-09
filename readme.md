@@ -28,6 +28,7 @@ A resource definition as above would build the following urls
     /organisation/<id>/teams/
     /organisation/<id>/teams/<id>
     /organisation/<id>/teams/<id>/people/
+    /project/
 
 Each of these urls would be routed to the applicable controller (`OrganisationController` in the case of `/organisation/` for example)
 and the correct method, based on the HTTP verb and number of parameters.
