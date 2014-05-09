@@ -45,8 +45,24 @@ class MatchableUri
      *
      * @return mixed[]
      */
-    public function getParameters()
+    public function getParameters($uri)
     {
-        return array();
+        if(!$this->matches($uri)){
+            return array();
+        }
+
+        $params = $this->resource->getParameterScheme()->getParameters();
+        $matches = array();
+        preg_match($this->uriRegex, $uri, $matches);
+
+        $parameterValues = array();
+        foreach($params as $p){
+            /** @var \Nap\Resource\Parameter\ParameterInterface $p */
+            if(array_key_exists($p->getName(), $matches)){
+                $parameterValues[$p->getName()] = $p->convertValue($matches[$p->getName()]);
+            }
+        }
+
+        return $parameterValues;
     }
 } 
