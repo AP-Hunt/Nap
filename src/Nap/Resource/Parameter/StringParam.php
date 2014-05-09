@@ -1,27 +1,18 @@
 <?php
 namespace Nap\Resource\Parameter;
 
-
-interface ParameterInterface {
-
-    /**
-     * @return string
-     */
-    public function getName();
+class StringParam extends ParameterBase
+{
 
     /**
      * Returns a regular expression matching the parameter
      *
      * @return string
      */
-    public function getMatchingExpression();
-
-    /**
-     * Whether the parameter is mandatory within the route
-     *
-     * @return boolean
-     */
-    public function isRequired();
+    public function getMatchingExpression()
+    {
+        return "[A-Za-z0-9\-._~:/?\[\]@1\$&'\(\)*\+,;=]+";
+    }
 
     /**
      * Converts the matched value in to the intended data type.
@@ -30,5 +21,8 @@ interface ParameterInterface {
      * @param   string  $value
      * @return  mixed|false
      */
-    public function convertValue($value);
-} 
+    public function convertValue($value)
+    {
+        return strval($value);
+    }
+}
