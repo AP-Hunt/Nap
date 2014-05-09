@@ -77,9 +77,18 @@ class Application
             $controller->{$method}($request, $parameters);
         };
 
+        $controllerIndexCall = function() use($controller, $request){
+            $controller->index($request);
+        };
+
         switch(strtolower($request->getMethod()))
         {
             case "get":
+                if(count($parameters) === 0){
+                    $controllerIndexCall();
+                    break;
+                }
+
                 $controllerMethodCall("get");
                 break;
 

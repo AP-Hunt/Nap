@@ -160,7 +160,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $controllerPath = "\My\ResourceController.php";
         $expectedPath = "/my/resource";
 
-        $matchedResource = new \Nap\Resource\MatchedResource($resource, array());
+        $matchedResource = new \Nap\Resource\MatchedResource($resource, array("id" => 1));
         $this->matcher->expects($this->once())
             ->method("match")
             ->with($expectedPath)
