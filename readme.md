@@ -8,10 +8,11 @@ The following is an example of the envisioned configuration of resources, stored
 ```php
 <?php
 use \Nap\Resource\Resource;
+use \Nap\Resource\Parameter;
 
 return array(
-    new Resource("Organisation", "/organisation", array(
-        new Resource("Team", "/team", array(
+    new Resource("Organisation", "/organisation", new Scheme\Id(), array(
+        new Resource("Teams", "/teams", new Scheme\Id(), array(
             new Resource("People", "/people")
         ))
     )),
@@ -20,6 +21,13 @@ return array(
 )
 ```
 
-A resource definition as above would build relevant URLs. A team with id 3 in organisation with id 1 would be accessible through the following URL, given the above configuration
+A resource definition as above would build the following urls
 
-    /organisation/1/team/3
+    /organisation/
+    /organisation/<id>
+    /organisation/<id>/teams/
+    /organisation/<id>/teams/<id>
+    /organisation/<id>/teams/<id>/people/
+
+Each of these urls would be routed to the applicable controller (`OrganisationController` in the case of `/organisation/` for example)
+and the correct method, based on the HTTP verb and number of parameters.
