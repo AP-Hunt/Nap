@@ -57,7 +57,7 @@ class MatchableUriBuilder implements MatchableUriBuilderInterface
 
     private function makeRegexFromPath($path)
     {
-        return sprintf("#^%s$#", $path);
+        return sprintf("#^%s/?$#", $path);
     }
 
     private function parameterMatcher(ParameterInterface $param)

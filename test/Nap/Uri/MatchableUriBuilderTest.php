@@ -23,7 +23,7 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
         // Arrange
         $resource = new \Nap\Resource\Resource("Resource", "/resource");
         $expectedUriRegexs = array(
-            "#^/resource$#"
+            "#^/resource/?$#"
         );
 
         // Act
@@ -36,7 +36,7 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
         // Arrange
         $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleRequiredParam());
         $expectedUriRegexs = array(
-            "#^/resource/(?P<id>\d+)$#"
+            "#^/resource/(?P<id>\d+)/?$#"
         );
 
         // Act
@@ -49,8 +49,8 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
         // Arrange
         $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleOptionalParam());
         $expectedUriRegexs = array(
-            "#^/resource$#",
-            "#^/resource/(?P<id>\d+)$#"
+            "#^/resource/?$#",
+            "#^/resource/(?P<id>\d+)/?$#"
         );
 
         // Act
@@ -65,8 +65,8 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
             new \Nap\Resource\Resource("Child", "/child")
         ));
         $expectedUriRegexs = array(
-            "#^/resource$#",
-            "#^/resource/child$#"
+            "#^/resource/?$#",
+            "#^/resource/child/?$#"
         );
 
         // Act
@@ -81,8 +81,8 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
             new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleRequiredParam())
         ));
         $expectedUriRegexs = array(
-            "#^/resource$#",
-            "#^/resource/child/(?P<id>\d+)$#"
+            "#^/resource/?$#",
+            "#^/resource/child/(?P<id>\d+)/?$#"
         );
 
         // Act
@@ -97,9 +97,9 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
             new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleOptionalParam())
         ));
         $expectedUriRegexs = array(
-            "#^/resource$#",
-            "#^/resource/child$#",
-            "#^/resource/child/(?P<id>\d+)$#"
+            "#^/resource/?$#",
+            "#^/resource/child/?$#",
+            "#^/resource/child/(?P<id>\d+)/?$#"
         );
 
         // Act
@@ -114,8 +114,8 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
             new \Nap\Resource\Resource("Child", "/child")
         ));
         $expectedUriRegexs = array(
-            "#^/resource/(?P<id>\d+)$#",
-            "#^/resource/(?P<id>\d+)/child$#"
+            "#^/resource/(?P<id>\d+)/?$#",
+            "#^/resource/(?P<id>\d+)/child/?$#"
         );
 
         // Act
@@ -130,9 +130,9 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
             new \Nap\Resource\Resource("Child", "/child")
         ));
         $expectedUriRegexs = array(
-            "#^/resource$#",
-            "#^/resource/(?P<id>\d+)$#",
-            "#^/resource/child$#"
+            "#^/resource/?$#",
+            "#^/resource/(?P<id>\d+)/?$#",
+            "#^/resource/child/?$#"
         );
 
         // Act
