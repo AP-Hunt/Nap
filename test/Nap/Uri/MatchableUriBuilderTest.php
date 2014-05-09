@@ -2,169 +2,188 @@
 
 class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
 {
-    /** @test **/
-    public function WhenRootResourceHasNoChildren_GeneratesOneUri()
+    /** @var \Nap\Uri\MatchableUriBuilder */
+    private $builder;
+
+    public function setUp()
     {
-        // Arrange
-        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", null);
-        $expectedRegex = "#^/my/resource$#";
-        $expectedCount = 1;
+        $this->builder = new \Nap\Uri\MatchableUriBuilder();
+    }
 
-        $builder  = new \Nap\Uri\MatchableUriBuilder();
-
-        // Act
-        $uris = $builder->buildUrisForResource($root);
-        
-        // Assert
-        $this->assertEquals($expectedCount, count($uris));
-        $this->assertEquals($expectedRegex, $uris[0]->getUriRegex());
+    public function tearDown()
+    {
+        $this->builder = null;
     }
 
     /** @test **/
-    public function WhenRootResourceHasOneChild_GeneratesTwoUris()
+    public function resourceWithNoParameters_NoChildren_GeneratesOneUri()
     {
         // Arrange
-        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", null, array(
-            new \Nap\Resource\Resource("Child", "/child", null)
+        $resource = new \Nap\Resource\Resource("Resource", "/resource");
+        $expectedUriRegexs = array(
+            "#^/resource$#"
+        );
+
+        // Act
+        $this->assertGeneratedUris($resource, $expectedUriRegexs);
+    }
+
+    /** @test **/
+    public function resourceWithOneRequiredParameter_NoChildren_GeneratesOneUri()
+    {
+        // Arrange
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleRequiredParam());
+        $expectedUriRegexs = array(
+            "#^/resource/(?P<id>\d+)$#"
+        );
+
+        // Act
+        $this->assertGeneratedUris($resource, $expectedUriRegexs);
+    }
+
+    /** @test **/
+    public function resourceWithOneOptionalParameter_NoChildren_GeneratesTwoUris()
+    {
+        // Arrange
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleOptionalParam());
+        $expectedUriRegexs = array(
+            "#^/resource$#",
+            "#^/resource/(?P<id>\d+)$#"
+        );
+
+        // Act
+        $this->assertGeneratedUris($resource, $expectedUriRegexs);
+    }
+
+    /** @test **/
+    public function resourceWithNoParameters_OneChildWithNoParams_GeneratesTwoUris()
+    {
+        // Arrange
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", null, array(
+            new \Nap\Resource\Resource("Child", "/child")
         ));
-        $expectedRegexs = array(
-            "#^/my/resource$#",
-            "#^/my/resource/child$#"
+        $expectedUriRegexs = array(
+            "#^/resource$#",
+            "#^/resource/child$#"
         );
-        $expectedCount = 2;
-
-        $builder  = new \Nap\Uri\MatchableUriBuilder();
 
         // Act
-        $uris = $builder->buildUrisForResource($root);
-
-        // Assert
-        $this->assertEquals($expectedCount, count($uris));
-        foreach($uris as $i => $u){
-            $this->assertEquals($expectedRegexs[$i], $u->getUriRegex());
-        }
+        $this->assertGeneratedUris($resource, $expectedUriRegexs);
     }
 
     /** @test **/
-    public function WhenRootResourceHasOneGrandChild_GeneratesThreeUris()
+    public function resourceWithNoParameters_OneChildWithOneRequiredParam_GeneratesTwoUris()
     {
         // Arrange
-        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", null, array(
-            new \Nap\Resource\Resource("Child", "/child", null, array(
-                new \Nap\Resource\Resource("Grandchild", "/grandchild", null)
-            ))
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", null, array(
+            new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleRequiredParam())
         ));
-        $expectedRegexs = array(
-            "#^/my/resource$#",
-            "#^/my/resource/child$#",
-            "#^/my/resource/child/grandchild$#"
+        $expectedUriRegexs = array(
+            "#^/resource$#",
+            "#^/resource/child/(?P<id>\d+)$#"
         );
-        $expectedCount = 3;
-
-        $builder  = new \Nap\Uri\MatchableUriBuilder();
 
         // Act
-        $uris = $builder->buildUrisForResource($root);
-
-        // Assert
-        $this->assertEquals($expectedCount, count($uris));
-        foreach($uris as $i => $u){
-            $this->assertEquals($expectedRegexs[$i], $u->getUriRegex());
-        }
+        $this->assertGeneratedUris($resource, $expectedUriRegexs);
     }
 
     /** @test **/
-    public function WhenRootResourceHasTwoChildren_GeneratesThreeUris()
+    public function resourceWithNoParameters_OneChildWithOneOptionalParam_GeneratesThreeUris()
     {
         // Arrange
-        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", null, array(
-            new \Nap\Resource\Resource("Child", "/child", null),
-            new \Nap\Resource\Resource("Sibling", "/sibling", null)
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", null, array(
+            new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleOptionalParam())
         ));
-        $expectedRegexs = array(
-            "#^/my/resource$#",
-            "#^/my/resource/child$#",
-            "#^/my/resource/sibling$#"
+        $expectedUriRegexs = array(
+            "#^/resource$#",
+            "#^/resource/child$#",
+            "#^/resource/child/(?P<id>\d+)$#"
         );
-        $expectedCount = 3;
-
-        $builder  = new \Nap\Uri\MatchableUriBuilder();
 
         // Act
-        $uris = $builder->buildUrisForResource($root);
-
-        // Assert
-        $this->assertEquals($expectedCount, count($uris));
-        foreach($uris as $i => $u){
-            $this->assertEquals($expectedRegexs[$i], $u->getUriRegex());
-        }
-    }
-
-    /** @test */
-    public function WhenResourceHasNoParameterScheme_AndNoChildren_GeneratesOneUri()
-    {
-        // Arrange
-        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", null);
-        $expectedRegex = "#^/my/resource$#";
-        $expectedCount = 1;
-
-        $builder  = new \Nap\Uri\MatchableUriBuilder();
-
-        // Act
-        $uris = $builder->buildUrisForResource($root);
-
-        // Assert
-        $this->assertEquals($expectedCount, count($uris));
-        $this->assertEquals($expectedRegex, $uris[0]->getUriRegex());
+        $this->assertGeneratedUris($resource, $expectedUriRegexs);
     }
 
     /** @test **/
-    public function WhenResourceHasParameterScheme_WithSingleParameter_AndNoChildren_GeneratesTwoUris()
+    public function resourceWithOneRequiredParameter_OneChildWithNoParams_GeneratesTwoUris()
     {
         // Arrange
-        $paramScheme = new Stub_ParamScheme();
-        $root = new \Nap\Resource\Resource("MyResource", "/my/resource", $paramScheme);
-        $expectedRegexs = array(
-            "#^/my/resource$#",
-            "#^/my/resource/(?P<Stub>\d+)$#"
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleRequiredParam(), array(
+            new \Nap\Resource\Resource("Child", "/child")
+        ));
+        $expectedUriRegexs = array(
+            "#^/resource/(?P<id>\d+)$#",
+            "#^/resource/(?P<id>\d+)/child$#"
         );
-        $expectedCount = 2;
-
-        $builder  = new \Nap\Uri\MatchableUriBuilder();
 
         // Act
-        $uris = $builder->buildUrisForResource($root);
+        $this->assertGeneratedUris($resource, $expectedUriRegexs);
+    }
+
+    /** @test **/
+    public function resourceWithOneOptionalParameter_OneChildWithNoParams_GeneratesThreeUris()
+    {
+        // Arrange
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleOptionalParam(), array(
+            new \Nap\Resource\Resource("Child", "/child")
+        ));
+        $expectedUriRegexs = array(
+            "#^/resource$#",
+            "#^/resource/(?P<id>\d+)$#",
+            "#^/resource/child$#"
+        );
+
+        // Act
+        $this->assertGeneratedUris($resource, $expectedUriRegexs);
+    }
+
+    private function assertGeneratedUris(\Nap\Resource\Resource $resource, array $expectedUriRegexs)
+    {
+        // Act
+        $uris = $this->builder->buildUrisForResource($resource);
 
         // Assert
-        $this->assertEquals($expectedCount, count($uris));
-        foreach($uris as $i => $u){
-            $this->assertEquals($expectedRegexs[$i], $u->getUriRegex());
+        $countExpected = count($expectedUriRegexs);
+        $countActual = count($uris);
+        $this->assertEquals($countExpected, $countActual, "Expected ".$countExpected. " URIs but got ".$countActual);
+        for ($i = 0; $i <= count($expectedUriRegexs) - 1; $i++) {
+            $regex = $expectedUriRegexs[$i];
+            $uri = $uris[$i];
+
+            $this->assertEquals($regex, $uri->getUriRegex(), "Expected ".$regex." but got " . $uri->getUriRegex());
         }
     }
 }
 
-class Stub_ParamScheme implements \Nap\Resource\Parameter\ParameterScheme
+class Stub_Param implements \Nap\Resource\Parameter\ParameterInterface
 {
     /**
-     * @return \Nap\Resource\Parameter\ParameterInterface[]
+     * @var
      */
-    public function getParameters()
-    {
-        return array(
-            new Stub_IntParameter()
-        );
-    }
-}
+    private $name;
+    /**
+     * @var
+     */
+    private $required;
+    /**
+     * @var
+     */
+    private $matchingExpression;
 
-class Stub_IntParameter implements \Nap\Resource\Parameter\ParameterInterface
-{
+    public function __construct($name, $required, $matchingExpression)
+    {
+
+        $this->name = $name;
+        $this->required = $required;
+        $this->matchingExpression = $matchingExpression;
+    }
 
     /**
      * @return string
      */
     public function getName()
     {
-        return "Stub";
+        return $this->name;
     }
 
     /**
@@ -174,7 +193,17 @@ class Stub_IntParameter implements \Nap\Resource\Parameter\ParameterInterface
      */
     public function getMatchingExpression()
     {
-        return "\d+";
+        return $this->matchingExpression;
+    }
+
+    /**
+     * Whether the parameter is mandatory within the route
+     *
+     * @return boolean
+     */
+    public function isRequired()
+    {
+        return $this->required;
     }
 
     /**
@@ -185,6 +214,33 @@ class Stub_IntParameter implements \Nap\Resource\Parameter\ParameterInterface
      */
     public function convertValue($value)
     {
-        return $value;
+        // TODO: Implement convertValue() method.
+    }
+}
+
+
+class Stub_ParamScheme_SingleRequiredParam implements \Nap\Resource\Parameter\ParameterScheme
+{
+    /**
+     * @return \Nap\Resource\Parameter\ParameterInterface[]
+     */
+    public function getParameters()
+    {
+        return array(
+            new Stub_Param("id", true, "\d+")
+        );
+    }
+}
+
+class Stub_ParamScheme_SingleOptionalParam implements \Nap\Resource\Parameter\ParameterScheme
+{
+    /**
+     * @return \Nap\Resource\Parameter\ParameterInterface[]
+     */
+    public function getParameters()
+    {
+        return array(
+            new Stub_Param("id", false, "\d+")
+        );
     }
 }

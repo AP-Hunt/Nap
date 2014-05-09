@@ -17,6 +17,13 @@ interface ParameterInterface {
     public function getMatchingExpression();
 
     /**
+     * Whether the parameter is mandatory within the route
+     *
+     * @return boolean
+     */
+    public function isRequired();
+
+    /**
      * Converts the matched value in to the intended data type
      *
      * @param   string  $value

@@ -67,6 +67,9 @@ class Resource
         return $this->parent;
     }
 
+    /**
+     * @return Parameter\ParameterScheme
+     */
     public function getParameterScheme()
     {
         return $this->parameterScheme;

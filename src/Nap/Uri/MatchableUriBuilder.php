@@ -2,6 +2,8 @@
 namespace Nap\Uri;
 
 
+use Nap\Resource\Parameter\ParameterInterface;
+
 class MatchableUriBuilder implements MatchableUriBuilderInterface
 {
     /**
@@ -10,55 +12,56 @@ class MatchableUriBuilder implements MatchableUriBuilderInterface
      */
     public function buildUrisForResource(\Nap\Resource\Resource $rootResource)
     {
-        $uris = array();
+        return $this->buildPrefixedUrisForResource("", $rootResource);
+    }
 
-        $uriPartialRegex = $rootResource->getUriPartial();
-        $path = $this->prependResourceUriPartsToPartial($rootResource->getParent(), $uriPartialRegex);
-        $uriRegex = $this->makeRegexFromPath($path);
-
-        $uris[] = new MatchableUri($uriRegex, $rootResource);
-
-        $parameterisedUris = $this->makeParameterisedUrisForResource($rootResource);
-        $uris = array_merge($uris, $parameterisedUris);
-
-        if($rootResource->hasChildren()){
-            foreach($rootResource->getChildResources() as $child){
-                $uris = array_merge($uris, $this->buildUrisForResource($child));
+    private function buildPrefixedUrisForResource($prefix, \Nap\Resource\Resource $rootResource)
+    {
+        // Make root of uri
+        $requiredParams = array_filter($rootResource->getParameterScheme()->getParameters(),
+            function(ParameterInterface $param){
+                return $param->isRequired();
             }
-        }
+        );
 
-        return $uris;
-    }
+        $baseUri = array_reduce($requiredParams, function($uri, ParameterInterface $param){
+            return $uri."/".$this->parameterMatcher($param);
+        }, $prefix.$rootResource->getUriPartial());
 
-    private function prependResourceUriPartsToPartial(\Nap\Resource\Resource $rootResource = null, $uriPartial)
-    {
-        if($rootResource == null){
-            return $uriPartial;
-        }
-
-        $newPartial = $rootResource->getUriPartial().$uriPartial;
-        return $this->prependResourceUriPartsToPartial($rootResource->getParent(), $newPartial);
-    }
-
-    private function makeParameterisedUrisForResource(\Nap\Resource\Resource $resource)
-    {
-        $uriPartialRegex = $resource->getUriPartial();
-        $baseUri = $this->prependResourceUriPartsToPartial($resource->getParent(), $uriPartialRegex);
-
+        // Start uri collection
         $uris = array();
-        foreach($resource->getParameterScheme()->getParameters() as $param){
-            /** @var \Nap\Resource\Parameter\ParameterInterface $param */
-            $paramMatcher = sprintf("/(?P<%s>%s)", $param->getName(), $param->getMatchingExpression());
-            $regex = $this->makeRegexFromPath($baseUri.$paramMatcher);
 
-            $uris[] = new MatchableUri($regex, $resource);
+        // Add root uri
+        $uris[] = new MatchableUri($this->makeRegexFromPath($baseUri), $rootResource);
+
+        // Add uris with optional params
+        $optionalParams = array_filter($rootResource->getParameterScheme()->getParameters(),
+            function(ParameterInterface $param){
+                return !$param->isRequired();
+            }
+        );
+
+        foreach($optionalParams as $param){
+            $u = $baseUri."/".$this->parameterMatcher($param);
+            $uris[] = new MatchableUri($this->makeRegexFromPath($u), $rootResource);
+        }
+
+        foreach($rootResource->getChildResources() as $child)
+        {
+            $uris = array_merge($uris, $this->buildPrefixedUrisForResource($baseUri, $child));
         }
 
         return $uris;
     }
+
 
     private function makeRegexFromPath($path)
     {
         return sprintf("#^%s$#", $path);
+    }
+
+    private function parameterMatcher(ParameterInterface $param)
+    {
+        return sprintf("(?P<%s>%s)", $param->getName(), $param->getMatchingExpression());
     }
 }
