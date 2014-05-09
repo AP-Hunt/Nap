@@ -41,16 +41,20 @@ class Application
             throw new \Nap\Resource\NoMatchingResourceException();
         }
 
-        $controllerPath = $this->resolver->resolve($matchedResource);
+        $controllerPath = $this->resolver->resolve($matchedResource->getResource());
         $controller = $this->builder->buildController($controllerPath);
 
         if(!($controller instanceof \Nap\Controller\NapControllerInterface)){
             throw new \Nap\Controller\InvalidControllerException();
         }
 
-        $this->dispatchMethod($controller, $request);
+        $this->dispatchMethod($controller, $request, $matchedResource->getParameters());
     }
 
+    /**
+     * @param $uri
+     * @return Resource\MatchedResource|null
+     */
     private function findResourceForUri($uri)
     {
         foreach($this->resources as $root)
@@ -66,28 +70,33 @@ class Application
 
     private function dispatchMethod(
         \Nap\Controller\NapControllerInterface $controller,
-        \Symfony\Component\HttpFoundation\Request $request
+        \Symfony\Component\HttpFoundation\Request $request,
+        array $parameters
     ) {
+        $controllerMethodCall = function($method) use($controller, $request, $parameters){
+            $controller->{$method}($request, $parameters);
+        };
+
         switch(strtolower($request->getMethod()))
         {
             case "get":
-                $controller->get($request);
+                $controllerMethodCall("get");
                 break;
 
             case "post":
-                $controller->post($request);
+                $controllerMethodCall("post");
                 break;
 
             case "put":
-                $controller->put($request);
+                $controllerMethodCall("put");
                 break;
 
             case "delete":
-                $controller->delete($request);
+                $controllerMethodCall("delete");
                 break;
 
             case "options":
-                $controller->options($request);
+                $controllerMethodCall("options");
                 break;
         }
     }

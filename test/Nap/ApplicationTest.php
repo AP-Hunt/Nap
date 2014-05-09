@@ -35,10 +35,11 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $uri = "/my/resource?query=string";
         $expectedPath = "/my/resource";
+        $matchedResource = new \Nap\Resource\MatchedResource(new \Nap\Resource\Resource("MyResource", "", null), array());
         $this->matcher->expects($this->once())
                 ->method("match")
                 ->with($expectedPath)
-                ->will($this->returnValue(new \Nap\Resource\Resource("MyResource", "", null)));
+                ->will($this->returnValue($matchedResource));
 
         $this->expectBuilderReturnsValidController();
 
@@ -75,10 +76,11 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $uri = "/my/resource?query=string";
         $expectedPath = "/my/resource";
 
+        $matchedResource = new \Nap\Resource\MatchedResource($resource, array());
         $this->matcher->expects($this->once())
             ->method("match")
             ->with($expectedPath)
-            ->will($this->returnValue($resource));
+            ->will($this->returnValue($matchedResource));
 
         $this->resolver->expects($this->once())
             ->method("resolve")
@@ -98,10 +100,11 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $controllerPath = "\My\ResourceController.php";
         $expectedPath = "/my/resource";
 
+        $matchedResource = new \Nap\Resource\MatchedResource($resource, array());
         $this->matcher->expects($this->once())
             ->method("match")
             ->with($expectedPath)
-            ->will($this->returnValue($resource));
+            ->will($this->returnValue($matchedResource));
 
         $this->resolver->expects($this->once())
             ->method("resolve")
@@ -129,10 +132,11 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $uri = "/my/resource?query=string";
         $expectedPath = "/my/resource";
 
+        $matchedResource = new \Nap\Resource\MatchedResource($resource, array());
         $this->matcher->expects($this->once())
             ->method("match")
             ->with($expectedPath)
-            ->will($this->returnValue($resource));
+            ->will($this->returnValue($matchedResource));
 
         $this->resolver->expects($this->once())
             ->method("resolve")
@@ -156,10 +160,11 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $controllerPath = "\My\ResourceController.php";
         $expectedPath = "/my/resource";
 
+        $matchedResource = new \Nap\Resource\MatchedResource($resource, array());
         $this->matcher->expects($this->once())
             ->method("match")
             ->with($expectedPath)
-            ->will($this->returnValue($resource));
+            ->will($this->returnValue($matchedResource));
 
         $this->resolver->expects($this->once())
             ->method("resolve")

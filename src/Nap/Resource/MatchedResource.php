@@ -18,4 +18,22 @@ class MatchedResource
         $this->resource = $resource;
         $this->parameters = $parameters;
     }
+
+    /**
+     * @return \mixed[]
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @return Resource
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+
 } 
