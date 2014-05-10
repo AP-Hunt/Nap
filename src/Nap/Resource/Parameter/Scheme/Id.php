@@ -12,7 +12,7 @@ class Id implements ParameterScheme
      */
     public function getParameters()
     {
-        array(
+        return array(
             new IntParam("id", $required = false)
         );
     }
