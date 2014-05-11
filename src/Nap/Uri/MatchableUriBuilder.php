@@ -62,6 +62,6 @@ class MatchableUriBuilder implements MatchableUriBuilderInterface
 
     private function parameterMatcher(ParameterInterface $param)
     {
-        return sprintf("(?P<%s>%s)", $param->getName(), $param->getMatchingExpression());
+        return sprintf("(?P<%s>%s)", $param->getIdentifier(), $param->getMatchingExpression());
     }
 }

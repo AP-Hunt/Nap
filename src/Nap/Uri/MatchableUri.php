@@ -58,8 +58,8 @@ class MatchableUri
         $parameterValues = array();
         foreach($params as $p){
             /** @var \Nap\Resource\Parameter\ParameterInterface $p */
-            if(array_key_exists($p->getName(), $matches)){
-                $parameterValues[$p->getName()] = $p->convertValue($matches[$p->getName()]);
+            if(array_key_exists($p->getIdentifier(), $matches)){
+                $parameterValues[$p->getName()] = $p->convertValue($matches[$p->getIdentifier()]);
             }
         }
 

@@ -14,10 +14,16 @@ abstract class ParameterBase implements ParameterInterface
      */
     private $isRequired;
 
+    /**
+     * @var string
+     */
+    private $identifier;
+
     public function __construct($name, $isRequired)
     {
         $this->name = $name;
         $this->isRequired = $isRequired;
+        $this->identifier = uniqid(rand());
     }
 
 
@@ -40,6 +46,16 @@ abstract class ParameterBase implements ParameterInterface
     }
 
     /**
+     * Get a unique identifier for this parameter, different from the name.
+     *
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
      * Returns a regular expression matching the parameter
      *
      * @return string
@@ -54,4 +70,5 @@ abstract class ParameterBase implements ParameterInterface
      * @return  mixed|false
      */
     abstract public function convertValue($value);
-}
+
+ }

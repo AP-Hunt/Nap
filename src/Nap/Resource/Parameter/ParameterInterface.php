@@ -24,6 +24,13 @@ interface ParameterInterface {
     public function isRequired();
 
     /**
+     * Get a unique identifier for this parameter, different from the name.
+     *
+     * @return string
+     */
+    public function getIdentifier();
+
+    /**
      * Converts the matched value in to the intended data type.
      * Returns false when the value could not be converted to the data type.
      *

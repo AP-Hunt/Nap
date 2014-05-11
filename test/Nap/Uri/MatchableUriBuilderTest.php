@@ -16,7 +16,7 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
     {
         $this->builder = null;
     }
-
+    
     /** @test **/
     public function resourceWithNoParameters_NoChildren_GeneratesOneUri()
     {
@@ -133,6 +133,19 @@ class MatchableUriBuilderTest extends PHPUnit_Framework_TestCase
             "#^/resource/?$#",
             "#^/resource/(?P<id>\d+)/?$#",
             "#^/resource/child/?$#"
+        );
+
+        // Act
+        $this->assertGeneratedUris($resource, $expectedUriRegexs);
+    }
+    
+    /** @test **/
+    public function generatedRegularExpressions_UseParameterIdentifierForNamedMatch()
+    {
+        // Arrange
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleParam(new Stub_Param("id", true, "\d+", "aa0f")));
+        $expectedUriRegexs = array(
+            "#^/resource/(?P<aa0f>\d+)/?$#"
         );
 
         // Act
