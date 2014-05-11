@@ -51,7 +51,7 @@ class MatchableUri
             return array();
         }
 
-        $params = $this->resource->getParameterScheme()->getParameters();
+        $params = $this->resource->getParameters();
         $matches = array();
         preg_match($this->uriRegex, $uri, $matches);
 

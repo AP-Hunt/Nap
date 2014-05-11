@@ -37,31 +37,49 @@ class Resource
         $this->parameterScheme = $parameterScheme ?: new \Nap\Resource\Parameter\Scheme\None();
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @return string
+     */
     public function getUriPartial()
     {
         return $this->uriPartial;
     }
 
+    /**
+     * @return array|\Resource[]
+     */
     public function getChildResources()
     {
         return $this->childResources;
     }
 
+    /**
+     * @return bool
+     */
     public function hasChildren()
     {
         return (count($this->childResources) > 0);
     }
 
+    /**
+     * @param Resource $parentResource
+     */
     public function setParent(Resource $parentResource)
     {
         $this->parent = $parentResource;
     }
 
+    /**
+     * @return \Nap\Resource\Resource
+     */
     public function getParent()
     {
         return $this->parent;
@@ -73,5 +91,23 @@ class Resource
     public function getParameterScheme()
     {
         return $this->parameterScheme;
+    }
+
+    /**
+     * Returns all parameters, including those of the resource ancestors
+     *
+     * @return Parameter\ParameterInterface[]
+     */
+    public function getParameters()
+    {
+        $params = $this->getParameterScheme()->getParameters();
+        if($this->getParent() == null){
+            return $params;
+        }
+
+        $parent = $this->getParent();
+        $params = array_merge($params, $parent->getParameters());
+
+        return $params;
     }
 }
