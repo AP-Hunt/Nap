@@ -8,12 +8,21 @@ use Nap\Resource\Parameter\ParameterScheme;
 class Id implements ParameterScheme
 {
     /**
+     * @var array
+     */
+    private $params;
+
+    public function __construct()
+    {
+        $this->params = array(
+            new IntParam("id", $required = false)
+        );
+    }
+    /**
      * @return \Nap\Resource\Parameter\ParameterInterface[]
      */
     public function getParameters()
     {
-        return array(
-            new IntParam("id", $required = false)
-        );
+        return $this->params;
     }
 }
