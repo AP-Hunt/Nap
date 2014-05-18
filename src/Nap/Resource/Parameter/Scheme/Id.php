@@ -12,10 +12,10 @@ class Id implements ParameterScheme
      */
     private $params;
 
-    public function __construct()
+    public function __construct($required = false)
     {
         $this->params = array(
-            new IntParam("id", $required = false)
+            new IntParam("id", $required)
         );
     }
     /**
