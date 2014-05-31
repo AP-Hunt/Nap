@@ -94,20 +94,12 @@ class Resource
     }
 
     /**
-     * Returns all parameters, including those of the resource ancestors
+     * Returns resources parameters
      *
      * @return Parameter\ParameterInterface[]
      */
     public function getParameters()
     {
-        $params = $this->getParameterScheme()->getParameters();
-        if($this->getParent() == null){
-            return $params;
-        }
-
-        $parent = $this->getParent();
-        $params = array_merge($params, $parent->getParameters());
-
-        return $params;
+        return $this->getParameterScheme()->getParameters();
     }
 }

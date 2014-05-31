@@ -16,7 +16,7 @@ class MatchableUri
     }
 
     /**
-     * @return Resource
+     * @return \Nap\Resource\Resource
      */
     public function getResource()
     {
@@ -42,6 +42,7 @@ class MatchableUri
 
     /**
      * Gets the values of any parameters defined in the resource's parameter scheme
+     * (including its ancestors)
      *
      * @return mixed[]
      */
@@ -51,16 +52,23 @@ class MatchableUri
             return array();
         }
 
-        $params = $this->resource->getParameters();
         $matches = array();
         preg_match($this->uriRegex, $uri, $matches);
-
         $parameterValues = array();
-        foreach($params as $p){
-            /** @var \Nap\Resource\Parameter\ParameterInterface $p */
-            if(array_key_exists($p->getIdentifier(), $matches)){
-                $parameterValues[$p->getName()] = $p->convertValue($matches[$p->getIdentifier()]);
+
+        $resource = $this->getResource();
+        while($resource != null){
+            $params = $resource->getParameters();
+
+            foreach($params as $p){
+                /** @var \Nap\Resource\Parameter\ParameterInterface $p */
+                if(array_key_exists($p->getIdentifier(), $matches)){
+                    $key = $resource->getName()."/".$p->getName();
+                    $parameterValues[$key] = $p->convertValue($matches[$p->getIdentifier()]);
+                }
             }
+
+            $resource = $resource->getParent();
         }
 
         return $parameterValues;

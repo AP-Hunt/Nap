@@ -101,61 +101,12 @@ class ResourceTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test **/
-    public function GetParameters_WithNoParent_ReturnsJustOwnParameters()
+    public function GetParameters_ReturnsJustOwnParameters()
     {
         // Arrange
         $scheme = new Scheme\Id();
         $expected = $scheme->getParameters();
         $resource = new \Nap\Resource\Resource("Resource", "/resource", $scheme);
-
-        // Act
-        $actual = $resource->getParameters();
-
-        // Assert
-        $this->assertEquals($expected, $actual);
-    }
-
-    /** @test **/
-    public function GetParameters_WithParent_ReturnsOwnParametersAndParentParameters()
-    {
-        // Arrange
-        $parentScheme = new Scheme\Id();
-        $childScheme = new Scheme\Id();
-        $expected = array_merge($childScheme->getParameters(), $parentScheme->getParameters());
-
-        $resource = new \Nap\Resource\Resource("Child", "/child", $childScheme);
-        $parent = new \Nap\Resource\Resource("Parent", "/parent", $parentScheme, array(
-            $resource
-        ));
-
-        // Act
-        $actual = $resource->getParameters();
-
-        // Assert
-        $this->assertEquals($expected, $actual);
-    }
-
-    /** @test **/
-    public function GetParameters_WithGrandparentAndParent_ReturnsOwnParametersAndAncestors()
-    {
-        // Arrange
-        $grandparentScheme = new Scheme\Id();
-        $parentScheme = new Scheme\Id();
-        $childScheme = new Scheme\Id();
-        $expected = array_merge(
-            $childScheme->getParameters(),
-            $parentScheme->getParameters(),
-            $grandparentScheme->getParameters()
-        );
-
-        $resource = new \Nap\Resource\Resource("Child", "/child", $childScheme);
-        $parent = new \Nap\Resource\Resource("Parent", "/parent", $parentScheme, array(
-            $resource
-        ));
-
-        $grandparent = new \Nap\Resource\Resource("Grandparent", "/grandparent", $grandparentScheme, array(
-            $parent
-        ));
 
         // Act
         $actual = $resource->getParameters();

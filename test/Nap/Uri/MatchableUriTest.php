@@ -17,7 +17,7 @@ class MatchableUriTest extends \PHPUnit_Framework_TestCase
         // Assert
         $expectedArray = array();
 
-        $this->assertEquals($expectedArray, $actualArray);
+        $this->assertSame($expectedArray, $actualArray);
     }
 
     /** @test **/
@@ -34,10 +34,10 @@ class MatchableUriTest extends \PHPUnit_Framework_TestCase
         
         // Assert
         $expectedArray = array(
-            "id " => 1
+            "Resource/id" => 1
         );
         $this->assertEquals(count($expectedArray), count($params));
-        $this->assertTrue(array_diff($expectedArray, $params) == array());
+        $this->assertSame($expectedArray, $params);
     }
 
     /** @test **/
@@ -54,9 +54,46 @@ class MatchableUriTest extends \PHPUnit_Framework_TestCase
 
         // Assert
         $expectedArray = array(
-            "id" => 1
+            "Resource/id" => 1
         );
-        $this->assertNotEquals($expectedArray, $params);
-        $this->assertArrayNotHasKey("exttra", $params);
+        $this->assertNotSame($expectedArray, $params);
+        $this->assertArrayNotHasKey("extra", $params);
+    }
+
+    /** @test **/
+    public function getParameters_PrefixesMatchedParameter_WithResourceName()
+    {
+        // Arrange
+        $uri = "/resource/1";
+        $regex = "#^/resource/(?P<id>\d+)$#";
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleIntParam());
+        $matchableUri = new \Nap\Uri\MatchableUri($regex, $resource);
+
+        // Act
+        $params = $matchableUri->getParameters($uri);
+
+        // Assert
+        $this->assertArrayHasKey("Resource/id", $params);
+    }
+
+    /** @test **/
+    public function getParameters_WhenMatchingParentParameter_PrefixesParameter_WithParentName()
+    {
+        // Arrange
+        $uri = "/resource/1/child/1";
+        $regex = "#^/resource/(?P<id1>\d+)/child/(?P<id2>\d+)$#";
+
+        $child = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleIntParam("id2"));
+        $parent = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleIntParam("id1"), array(
+            $child
+        ));
+        $matchableUri = new \Nap\Uri\MatchableUri($regex, $child);
+
+        // Act
+        $params = $matchableUri->getParameters($uri);
+
+        // Assert
+        $this->assertArrayHasKey("Resource/id", $params);
+        $this->assertArrayHasKey("Child/id", $params);
     }
 } 
