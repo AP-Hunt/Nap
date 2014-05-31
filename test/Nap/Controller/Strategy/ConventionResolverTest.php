@@ -4,14 +4,10 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
 {
     /** @var \Nap\Controller\Strategy\ConventionResolver */
     private $resolver;
-    private $fileLoader;
 
     public function setUp()
     {
-        $this->fileLoader = $this->getMockBuilder("\Nap\Util\FileLoader")
-                                ->disableOriginalConstructor()
-                                ->getMock();
-        $this->resolver = new \Nap\Controller\Strategy\ConventionResolver($this->fileLoader);
+        $this->resolver = new \Nap\Controller\Strategy\ConventionResolver();
     }
 
     public function tearDown()
@@ -20,21 +16,17 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test **/
-    public function WhenResourceHasNoParent_LooksForResourceNamePlusControllerFile()
+    public function WhenResourceHasNoParent_LooksForResourceNamePlusController()
     {
         // Arrange
         $resource = new \Nap\Resource\Resource("MyResource", "", null);
-        $expectedRelativePath = str_replace("/", DIRECTORY_SEPARATOR, "/MyResourceController.php");
-
-        $this->fileLoader->expects($this->once())
-                    ->method("loadFile")
-                    ->with($expectedRelativePath);
+        $expectedFQN = str_replace("/", DIRECTORY_SEPARATOR, "/MyResourceController");
 
         // Act
-        $path = $this->resolver->resolve($resource);
+        $fqn = $this->resolver->resolve($resource);
 
         // Assert
-        $this->assertEquals($expectedRelativePath, $path);
+        $this->assertEquals($expectedFQN, $fqn);
     }
 
     /** @test **/
@@ -43,17 +35,13 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
         // Arrange
         $child = new \Nap\Resource\Resource("Child", "", null);
         $child->setParent(new \Nap\Resource\Resource("Parent", "", null));
-        $expectedRelativePath = str_replace("/", DIRECTORY_SEPARATOR, "/Parent/ChildController.php");
-
-        $this->fileLoader->expects($this->once())
-            ->method("loadFile")
-            ->with($expectedRelativePath);
+        $expectedFQN = str_replace("/", DIRECTORY_SEPARATOR, "/Parent/ChildController");
 
         // Act
-        $path = $this->resolver->resolve($child);
+        $fqn = $this->resolver->resolve($child);
 
         // Assert
-        $this->assertEquals($expectedRelativePath, $path);
+        $this->assertEquals($expectedFQN, $fqn);
     }
 
     /** @test **/
@@ -68,16 +56,12 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
         $child = new \Nap\Resource\Resource("Child", "", null);
         $child->setParent($parent);
 
-        $expectedRelativePath = str_replace("/", DIRECTORY_SEPARATOR, "/Grandparent/Parent/ChildController.php");
-
-        $this->fileLoader->expects($this->once())
-            ->method("loadFile")
-            ->with($expectedRelativePath);
+        $expectedFQN = str_replace("/", DIRECTORY_SEPARATOR, "/Grandparent/Parent/ChildController");
 
         // Act
-        $path = $this->resolver->resolve($child);
+        $fqn = $this->resolver->resolve($child);
 
         // Assert
-        $this->assertEquals($expectedRelativePath, $path);
+        $this->assertEquals($expectedFQN, $fqn);
     }
 }

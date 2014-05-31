@@ -20,7 +20,7 @@ class NamespacedControllerBuilderTest extends \PHPUnit_Framework_TestCase
     public function CorrectlyConvertsPathInToNamespace()
     {
         // Arrange
-        $path = str_replace("/", DIRECTORY_SEPARATOR, "/ControllerTest/Parent/ChildController.php");
+        $path = str_replace("/", "\\", "/ControllerTest/Parent/ChildController");
         $expectedType = "\ControllerTest\Parent\ChildController";
 
         $builder = new \Nap\Controller\Strategy\NamespacedControllerBuilder();

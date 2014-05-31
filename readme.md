@@ -37,7 +37,6 @@ and the correct method, based on the HTTP verb and number of parameters.
 The following example assumes you already have autoloading for the controller namespace defined
 
 ```php
-define("CONTROLLER_PATH", "/path/to/my/controllers");
 require_once(__DIR__."/../vendor/autoload.php");
 
 use \Nap\Resource\Resource;
@@ -57,7 +56,7 @@ $resources = array(
 
 $app = new \New\Application(
     new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder()),
-    new \Nap\Controller\Strategy\ConventionResolver(new \Nap\Util\FileLoader(CONTROLLER_PATH)),
+    new \Nap\Controller\Strategy\ConventionResolver(),
     new \Nap\Controller\Strategy\NamespacedControllerBuilder()
 );
 $app->setResources($resources);

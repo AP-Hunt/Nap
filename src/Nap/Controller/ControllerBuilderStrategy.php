@@ -4,10 +4,10 @@ namespace Nap\Controller;
 interface ControllerBuilderStrategy
 {
     /**
-     * Builds a Nap controller given a relative path to one
+     * Builds a Nap controller given a FQN
      *
-     * @param $controllerRelativePath
-     * @return \Nap\Controller\NapControllerInterface
+     * @param   string  $controllerFQN
+     * @return  \Nap\Controller\NapControllerInterface
      */
-    public function buildController($controllerRelativePath);
+    public function buildController($controllerFQN);
 } 

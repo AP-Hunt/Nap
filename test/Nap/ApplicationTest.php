@@ -33,7 +33,6 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function StartDeconstructsUriAndMatchesItToAResource()
     {
         // Arrange
-        $uri = "/my/resource?query=string";
         $expectedPath = "/my/resource";
         $matchedResource = new \Nap\Resource\MatchedResource(new \Nap\Resource\Resource("MyResource", "", null), array());
         $this->matcher->expects($this->once())
@@ -97,7 +96,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $resource = new \Nap\Resource\Resource("Resource", "", null);
-        $controllerPath = "\My\ResourceController.php";
+        $controllerFQN = "\My\ResourceController";
         $expectedPath = "/my/resource";
 
         $matchedResource = new \Nap\Resource\MatchedResource($resource, array());
@@ -109,11 +108,11 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->resolver->expects($this->once())
             ->method("resolve")
             ->with($resource)
-            ->will($this->returnValue($controllerPath));
+            ->will($this->returnValue($controllerFQN));
 
         $this->builder->expects($this->once())
             ->method("buildController")
-            ->with($controllerPath)
+            ->with($controllerFQN)
             ->will($this->returnValue($this->getMock("\Nap\Controller\NapControllerInterface")));
 
         // Act
@@ -128,8 +127,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $resource = new \Nap\Resource\Resource("Resource", "", null);
-        $controllerPath = "\My\ResourceController.php";
-        $uri = "/my/resource?query=string";
+        $controllerFQN = "\My\ResourceController";
         $expectedPath = "/my/resource";
 
         $matchedResource = new \Nap\Resource\MatchedResource($resource, array());
@@ -141,11 +139,11 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->resolver->expects($this->once())
             ->method("resolve")
             ->with($resource)
-            ->will($this->returnValue($controllerPath));
+            ->will($this->returnValue($controllerFQN));
 
         $this->builder->expects($this->once())
             ->method("buildController")
-            ->with($controllerPath)
+            ->with($controllerFQN)
             ->will($this->returnValue(new StdClass()));
 
         // Act
@@ -157,7 +155,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $resource = new \Nap\Resource\Resource("Resource", "", null);
-        $controllerPath = "\My\ResourceController.php";
+        $controllerFQN = "\My\ResourceController";
         $expectedPath = "/my/resource";
 
         $matchedResource = new \Nap\Resource\MatchedResource($resource, array("id" => 1));
@@ -169,12 +167,12 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->resolver->expects($this->once())
             ->method("resolve")
             ->with($resource)
-            ->will($this->returnValue($controllerPath));
+            ->will($this->returnValue($controllerFQN));
 
         $controller = $this->getMock("\Nap\Controller\NapControllerInterface");
         $this->builder->expects($this->once())
             ->method("buildController")
-            ->with($controllerPath)
+            ->with($controllerFQN)
             ->will($this->returnValue($controller));
 
         $controller->expects($this->once())
