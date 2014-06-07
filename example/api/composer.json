@@ -1,0 +1,12 @@
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url" : "https://github.com/AndyBursh/Nap.git"
+        }
+    ],
+
+    "require": {
+        "andybursh/nap": "dev-master"
+    }
+}

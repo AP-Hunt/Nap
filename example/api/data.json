@@ -1,0 +1,17 @@
+{
+    "todo-lists": [
+        {
+            "id": 1,
+            "name": "My list",
+            "items": [
+                {
+                    "title": "I need to do something"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "My other list"
+        }
+    ]
+}

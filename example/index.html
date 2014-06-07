@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-do List</title>
+    <script type="application/javascript" data-main="./js/bootstrap" src="./js/vendor/require.js"></script>
+</head>
+    <body>
+        <h1>To-do lists</h1>
+        <div id="container">
+            <ol data-bind="foreach: todoLists">
+                <li>
+                    <a href="#" data-bind="text: name, click: $parent.changeList.bind($parent)"></a>
+                </li>
+            </ol>
+
+            <div data-bind="ifnot: selectedList() == null">
+                <!-- ko  with: selectedList -->
+                <h3 data-bind="text: name"></h3>
+                <h4>Entries</h4>
+                <ol data-bind="foreach: items">
+                    <li data-bind="text: title"></li>
+                </ol>
+                <!-- /ko -->
+            </div>
+        </div>
+    </body>
+
+    <script type="application/javascript">
+        require(["TodoList", "vendor/knockout"],
+            function(TodoList, ko){
+                var list = TodoList;
+                var container = document.getElementById("container");
+                list.startup();
+
+                ko.applyBindings(list, container);
+            });
+    </script>
+</html>
