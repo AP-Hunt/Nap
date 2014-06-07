@@ -16,6 +16,21 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test **/
+    public function AppendsControllerNamespace_ToResolvedController()
+    {
+        // Arrange
+        $namespace = "\My\Namespace";
+        $resource = new \Nap\Resource\Resource("MyResource", "", null);
+        $expectedFQN = "\My\Namespace\MyResourceController";
+
+        // Act
+        $fqn = $this->resolver->resolve($namespace, $resource);
+
+        // Assert
+        $this->assertEquals($expectedFQN, $fqn);
+    }
+
+    /** @test **/
     public function WhenResourceHasNoParent_LooksForResourceNamePlusController()
     {
         // Arrange
@@ -23,7 +38,7 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
         $expectedFQN = str_replace("/", DIRECTORY_SEPARATOR, "/MyResourceController");
 
         // Act
-        $fqn = $this->resolver->resolve($resource);
+        $fqn = $this->resolver->resolve("", $resource);
 
         // Assert
         $this->assertEquals($expectedFQN, $fqn);
@@ -38,7 +53,7 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
         $expectedFQN = str_replace("/", DIRECTORY_SEPARATOR, "/Parent/ChildController");
 
         // Act
-        $fqn = $this->resolver->resolve($child);
+        $fqn = $this->resolver->resolve("", $child);
 
         // Assert
         $this->assertEquals($expectedFQN, $fqn);
@@ -59,7 +74,7 @@ class ConventionResolverTest extends PHPUnit_Framework_TestCase
         $expectedFQN = str_replace("/", DIRECTORY_SEPARATOR, "/Grandparent/Parent/ChildController");
 
         // Act
-        $fqn = $this->resolver->resolve($child);
+        $fqn = $this->resolver->resolve("", $child);
 
         // Assert
         $this->assertEquals($expectedFQN, $fqn);

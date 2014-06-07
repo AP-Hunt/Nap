@@ -1,34 +1,9 @@
 <?php
 
-class ApplicationTest extends \PHPUnit_Framework_TestCase
+require_once __DIR__."/ApplicationTestBase.php";
+
+class Application_StartTest extends ApplicationTestBase
 {
-    private $matcher;
-    private $resolver;
-    private $builder;
-
-    private $request;
-
-    public function setUp()
-    {
-        $this->matcher = $this->getMockBuilder("\Nap\Resource\ResourceMatcher")
-                    ->disableOriginalConstructor()->getMock();
-
-        $this->resolver = $this->getMock("\Nap\Controller\ControllerResolutionStrategy");
-        $this->builder = $this->getMock("\Nap\Controller\ControllerBuilderStrategy");
-
-        $this->app = new \Nap\Application($this->matcher, $this->resolver, $this->builder);
-        $this->app->setResources(
-            array(
-                new \Nap\Resource\Resource("MyResource", "/my/resource", null)
-            )
-        );
-
-        $this->request = \Symfony\Component\HttpFoundation\Request::create(
-            "/my/resource",
-            "GET"
-        );
-    }
-
     /** @test **/
     public function StartDeconstructsUriAndMatchesItToAResource()
     {
@@ -83,7 +58,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $this->resolver->expects($this->once())
             ->method("resolve")
-            ->with($resource);
+            ->with($this->isType("string"), $resource);
 
         $this->expectBuilderReturnsValidController();
 
@@ -107,7 +82,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $this->resolver->expects($this->once())
             ->method("resolve")
-            ->with($resource)
+            ->with($this->isType("string"), $resource)
             ->will($this->returnValue($controllerFQN));
 
         $this->builder->expects($this->once())
@@ -138,7 +113,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $this->resolver->expects($this->once())
             ->method("resolve")
-            ->with($resource)
+            ->with($this->isType("string"), $resource)
             ->will($this->returnValue($controllerFQN));
 
         $this->builder->expects($this->once())
@@ -166,7 +141,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $this->resolver->expects($this->once())
             ->method("resolve")
-            ->with($resource)
+            ->with($this->isType("string"), $resource)
             ->will($this->returnValue($controllerFQN));
 
         $controller = $this->getMock("\Nap\Controller\NapControllerInterface");

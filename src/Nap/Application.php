@@ -3,6 +3,7 @@ namespace Nap;
 
 class Application
 {
+    // Dependencies
     /** @var Resource\ResourceMatcher */
     private $matcher;
     /** @var Controller\ControllerResolutionStrategy */
@@ -11,6 +12,9 @@ class Application
     private $builder;
     /** @var Resource\Resource[] */
     private $resources;
+
+    // Configuration
+    private $controllerNamespace;
 
     public function __construct(
         \Nap\Resource\ResourceMatcher $matcher,
@@ -22,6 +26,8 @@ class Application
         $this->resolver = $resolver;
         $this->builder = $builder;
         $this->resources = array();
+
+        $this->controllerNamespace = "";
     }
 
     /**
@@ -30,6 +36,11 @@ class Application
     public function setResources(array $resources)
     {
         $this->resources = $resources;
+    }
+
+    public function setControllerNamespace($namespace)
+    {
+        $this->controllerNamespace = $namespace;
     }
 
     public function start(\Symfony\Component\HttpFoundation\Request $request)
@@ -41,7 +52,7 @@ class Application
             throw new \Nap\Resource\NoMatchingResourceException();
         }
 
-        $controllerPath = $this->resolver->resolve($matchedResource->getResource());
+        $controllerPath = $this->resolver->resolve($this->controllerNamespace, $matchedResource->getResource());
         $controller = $this->builder->buildController($controllerPath);
 
         if(!($controller instanceof \Nap\Controller\NapControllerInterface)){
