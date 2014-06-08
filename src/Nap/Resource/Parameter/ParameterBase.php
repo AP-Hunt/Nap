@@ -23,7 +23,7 @@ abstract class ParameterBase implements ParameterInterface
     {
         $this->name = $name;
         $this->isRequired = $isRequired;
-        $this->identifier = uniqid(rand());
+        $this->identifier = $name."_".rand();
     }
 
 
