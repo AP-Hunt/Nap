@@ -8,7 +8,7 @@ class MatchableUriTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $uri = "does not match";
         $regex = "#^/resource/(?P<id>\d+)$#";
-        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleIntParam());
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleSelfRequiredIntParam());
         $matchableUri = new \Nap\Uri\MatchableUri($regex, $resource);
 
         // Act
@@ -26,7 +26,7 @@ class MatchableUriTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $uri = "/resource/1";
         $regex = "#^/resource/(?P<id>\d+)$#";
-        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleIntParam());
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleSelfRequiredIntParam());
         $matchableUri = new \Nap\Uri\MatchableUri($regex, $resource);
 
         // Act
@@ -46,7 +46,7 @@ class MatchableUriTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $uri = "/resource/1";
         $regex = "#^/resource/(?P<id>\d+)/(?P<extra>.*)$#";
-        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleIntParam());
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleSelfRequiredIntParam());
         $matchableUri = new \Nap\Uri\MatchableUri($regex, $resource);
 
         // Act
@@ -66,7 +66,7 @@ class MatchableUriTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $uri = "/resource/1";
         $regex = "#^/resource/(?P<id>\d+)$#";
-        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleIntParam());
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleSelfRequiredIntParam());
         $matchableUri = new \Nap\Uri\MatchableUri($regex, $resource);
 
         // Act
@@ -83,8 +83,8 @@ class MatchableUriTest extends \PHPUnit_Framework_TestCase
         $uri = "/resource/1/child/1";
         $regex = "#^/resource/(?P<id1>\d+)/child/(?P<id2>\d+)$#";
 
-        $child = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleIntParam("id2"));
-        $parent = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleIntParam("id1"), array(
+        $child = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleSelfRequiredIntParam("id2"));
+        $parent = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleSelfRequiredIntParam("id1"), array(
             $child
         ));
         $matchableUri = new \Nap\Uri\MatchableUri($regex, $child);

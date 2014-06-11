@@ -7,7 +7,7 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $uri = "/uri";
-        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleIntParam());
+        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleSelfRequiredIntParam());
 
         $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
 
@@ -23,7 +23,7 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $uri = "/uri/1";
-        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleIntParam());
+        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleSelfRequiredIntParam());
 
         $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
 
@@ -39,7 +39,7 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $uri = "/uri/asd";
-        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleIntParam());
+        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleSelfRequiredIntParam());
 
         $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
 
@@ -56,8 +56,8 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $uri = "/uri/child/1";
 
-        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleIntParam("child_id"));
-        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleIntParam("id"), array(
+        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleSelfRequiredIntParam("child_id"));
+        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleChildRequiredIntParam("id"), array(
             $childResource
         ));
 
@@ -77,8 +77,8 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $uri = "/uri/1/child/1";
 
-        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleIntParam("child_id"));
-        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleIntParam("id"), array(
+        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleSelfRequiredIntParam("child_id"));
+        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleSelfRequiredIntParam("id"), array(
             $childResource
         ));
 
@@ -98,10 +98,10 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $uri = "/uri/child/1";
 
-        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleIntParam("child_id"));
+        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleSelfRequiredIntParam("child_id"));
 
         $optionalParamScheme = new Stub_ParamScheme_SingleParam(
-            new Stub_IntParam("id", false, "\d+", "id")
+            new Stub_IntParam("id", false, false, "\d+", "id")
         );
         $rootResource = new \Nap\Resource\Resource("Uri", "/uri", $optionalParamScheme, array(
             $childResource
@@ -115,30 +115,5 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
 
         // Assert
         $this->assertEquals($childResource, $matchedResource->getResource());
-    }
-
-    /** @test **/
-    public function UriWith3SegmentsAnd2Params_DoesNotMatchResourceWithRequiredParamAndParentWithOptionalParam()
-    {
-        // Arrange
-        $uri = "/uri/1/child/1";
-
-        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleIntParam("child_id"));
-
-        $optionalParamScheme = new Stub_ParamScheme_SingleParam(
-            new Stub_IntParam("id", false, "\d+", "id")
-        );
-        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", $optionalParamScheme, array(
-            $childResource
-        ));
-
-
-        $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
-
-        // Act
-        $matchedResource = $matcher->match($uri, $rootResource);
-
-        // Assert
-        $this->assertNull($matchedResource);
     }
 }
