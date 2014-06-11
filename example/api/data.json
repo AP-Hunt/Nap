@@ -5,13 +5,21 @@
             "name": "My list",
             "items": [
                 {
-                    "title": "I need to do something"
+                    "id": 1,
+                    "title": "I need to do something",
+                    "complete": false
+                },
+                {
+                    "id": 2,
+                    "title": "And I already did the other thing",
+                    "complete": true
                 }
             ]
         },
         {
             "id": 2,
-            "name": "My other list"
+            "name": "My other list",
+            "items": []
         }
     ]
 }

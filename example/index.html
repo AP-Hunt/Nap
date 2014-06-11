@@ -2,7 +2,10 @@
 <html>
 <head>
     <title>To-do List</title>
+    <meta charset="utf-8">
+
     <script type="application/javascript" data-main="./js/bootstrap" src="./js/vendor/require.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
 </head>
     <body>
         <h1>To-do lists</h1>
@@ -18,7 +21,13 @@
                 <h3 data-bind="text: name"></h3>
                 <h4>Entries</h4>
                 <ol data-bind="foreach: items">
-                    <li data-bind="text: title"></li>
+                    <li data-bind="css: {'item-complete': complete }">
+                        <span data-bind="text: title"></span>
+
+                        <!-- ko ifnot: complete -->
+                        <button data-bind="click: $root.markComplete.bind($root, $data, $parent)">Complete</button>
+                        <!-- /ko -->
+                    </li>
                 </ol>
                 <!-- /ko -->
             </div>
