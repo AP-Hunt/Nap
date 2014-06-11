@@ -60,6 +60,7 @@ $app = new \New\Application(
     new \Nap\Controller\Strategy\NamespacedControllerBuilder()
 );
 $app->setResources($resources);
+$app->setControllerNamespace("\\My\\Controller\\Namespace");
 $request = new \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 
 try{
