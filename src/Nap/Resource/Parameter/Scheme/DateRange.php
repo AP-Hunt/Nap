@@ -14,8 +14,8 @@ class DateRange implements ParameterScheme
     public function __construct()
     {
         $this->params = array(
-            new DateTimeParam("from", true),
-            new DateTimeParam("to", true)
+            new DateTimeParam("from", true, false),
+            new DateTimeParam("to", true, false)
         );
     }
 

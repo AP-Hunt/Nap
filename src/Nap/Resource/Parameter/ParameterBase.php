@@ -12,20 +12,25 @@ abstract class ParameterBase implements ParameterInterface
     /**
      * @var bool
      */
-    private $isRequired;
+    private $isRequiredForSelf;
+
+    /**
+     * @var bool
+     */
+    private $isRequiredForChildren;
 
     /**
      * @var string
      */
     private $identifier;
 
-    public function __construct($name, $isRequired)
+    public function __construct($name, $isRequiredForSelf, $isRequiredForChildren)
     {
         $this->name = $name;
-        $this->isRequired = $isRequired;
+        $this->isRequiredForSelf = $isRequiredForSelf;
+        $this->isRequiredForChildren = $isRequiredForChildren;
         $this->identifier = $name."_".rand();
     }
-
 
     /**
      * @return string
@@ -36,13 +41,23 @@ abstract class ParameterBase implements ParameterInterface
     }
 
     /**
-     * Whether the parameter is mandatory within the route
+     * Whether the parameter is mandatory for this resource
      *
      * @return boolean
      */
-    public function isRequired()
+    public function isRequiredForSelf()
     {
-        return $this->isRequired;
+        return $this->isRequiredForSelf;
+    }
+
+    /**
+     * Whether the parameter is mandatory for this resource's children
+     *
+     * @return boolean
+     */
+    public function isRequiredForChildren()
+    {
+        return $this->isRequiredForChildren;
     }
 
     /**

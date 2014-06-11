@@ -1,7 +1,6 @@
 <?php
 namespace Nap\Uri;
 
-
 use Nap\Resource\Parameter\ParameterInterface;
 
 class MatchableUriBuilder implements MatchableUriBuilderInterface
@@ -12,56 +11,110 @@ class MatchableUriBuilder implements MatchableUriBuilderInterface
      */
     public function buildUrisForResource(\Nap\Resource\Resource $rootResource)
     {
-        return $this->buildPrefixedUrisForResource("", $rootResource);
+        return $this->buildPrefixedUris("", $rootResource);
     }
 
-    private function buildPrefixedUrisForResource($prefix, \Nap\Resource\Resource $rootResource)
+    private function buildPrefixedUris($prefix, \Nap\Resource\Resource $rootResource)
     {
-        // Make root of uri
-        $requiredParams = array_filter($rootResource->getParameterScheme()->getParameters(),
-            function(ParameterInterface $param){
-                return $param->isRequired();
-            }
-        );
-
-        $baseUri = array_reduce($requiredParams, function($uri, ParameterInterface $param){
-            return $uri."/".$this->parameterMatcher($param);
-        }, $prefix.$rootResource->getUriPartial());
-
-        // Start uri collection
         $uris = array();
 
-        // Add root uri
-        $uris[] = new MatchableUri($this->makeRegexFromPath($baseUri), $rootResource);
+        // Generate uri for self
+        $selfUriRegex = $prefix.$this->generateUriRegexForSelf($rootResource);
+        $uris[] = new MatchableUri($this->wrapRegularExpression($selfUriRegex), $rootResource);
 
-        // Add uris with optional params
-        $optionalParams = array_filter($rootResource->getParameterScheme()->getParameters(),
-            function(ParameterInterface $param){
-                return !$param->isRequired();
-            }
-        );
-
-        foreach($optionalParams as $param){
-            $u = $baseUri."/".$this->parameterMatcher($param);
-            $uris[] = new MatchableUri($this->makeRegexFromPath($u), $rootResource);
-        }
-
-        foreach($rootResource->getChildResources() as $child)
-        {
-            $uris = array_merge($uris, $this->buildPrefixedUrisForResource($baseUri, $child));
-        }
+        // Generate uri prefix for children
+        $parentUriRegex = $prefix.$this->generateUriRegexAsParent($rootResource);
+        $uris = array_reduce(
+            $rootResource->getChildResources(),
+            function(array $allUris, \Nap\Resource\Resource $resource) use($parentUriRegex){
+                $allUris = array_merge($allUris, $this->buildPrefixedUris($parentUriRegex, $resource));
+                return $allUris;
+            },
+            $uris);
 
         return $uris;
     }
 
-
-    private function makeRegexFromPath($path)
+    private function generateUriRegexForSelf(\Nap\Resource\Resource $rootResource)
     {
-        return sprintf("#^%s/?$#", $path);
+        $params = $rootResource->getParameters();
+        $rootUri = $rootResource->getUriPartial();
+
+        $requiredParams = array_filter($params, function(ParameterInterface $p){
+            return $p->isRequiredForSelf();
+        });
+
+        $optionalParams = array_filter($params, function(ParameterInterface $p){
+            return !$p->isRequiredForSelf();
+        });
+
+        $uriRegex = $this->appendRequiredParamsToUriRegex($rootUri, $requiredParams);
+
+
+        if(count($optionalParams) > 0) {
+            $uriRegex = $this->appendOptionalParamsToUriRegex($uriRegex, $optionalParams);
+        }
+
+        return $uriRegex;
     }
 
-    private function parameterMatcher(ParameterInterface $param)
+    private function generateUriRegexAsParent(\Nap\Resource\Resource $rootResource)
     {
-        return sprintf("(?P<%s>%s)", $param->getIdentifier(), $param->getMatchingExpression());
+        $params = $rootResource->getParameters();
+        $rootUri = $rootResource->getUriPartial();
+
+        $requiredParams = array_filter($params, function(ParameterInterface $p){
+            return $p->isRequiredForChildren();
+        });
+
+        $optionalParams = array_filter($params, function(ParameterInterface $p){
+            return !$p->isRequiredForChildren();
+        });
+
+        $uriRegex = $this->appendRequiredParamsToUriRegex($rootUri, $requiredParams);
+
+
+        if(count($optionalParams) > 0) {
+            $uriRegex = $this->appendOptionalParamsToUriRegex($uriRegex, $optionalParams);
+        }
+
+        return $uriRegex;
+    }
+
+    /**
+     * @param string                $rootUri
+     * @param ParameterInterface[]  $requiredParams
+     */
+    private function appendRequiredParamsToUriRegex($rootUri, array $requiredParams)
+    {
+        $uri = array_reduce($requiredParams, function($acc, ParameterInterface $param){
+                return $acc.$this->createRequiredParamRegex($param);
+            }, $rootUri);
+
+        return $uri;
+    }
+
+    private function appendOptionalParamsToUriRegex($rootUri, $optionalParams)
+    {
+        $uri = array_reduce($optionalParams, function($acc, ParameterInterface $param){
+                return $acc.$this->createOptionalParamRegex($param);
+            }, $rootUri);
+
+        return $uri;
+    }
+
+    private function createRequiredParamRegex(ParameterInterface $param)
+    {
+        return sprintf("(/(?P<%s>%s))", $param->getIdentifier(), $param->getMatchingExpression());
+    }
+
+    private function createOptionalParamRegex(ParameterInterface $param)
+    {
+        return sprintf("(/(?P<%s>%s))?", $param->getIdentifier(), $param->getMatchingExpression());
+    }
+
+    private function wrapRegularExpression($uri)
+    {
+        return sprintf("#^%s/?$#", $uri);
     }
 }

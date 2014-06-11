@@ -17,11 +17,18 @@ interface ParameterInterface {
     public function getMatchingExpression();
 
     /**
-     * Whether the parameter is mandatory within the route
+     * Whether the parameter is mandatory for this resource
      *
      * @return boolean
      */
-    public function isRequired();
+    public function isRequiredForSelf();
+
+    /**
+     * Whether the parameter is mandatory for this resource's children
+     *
+     * @return boolean
+     */
+    public function isRequiredForChildren();
 
     /**
      * Get a unique identifier for this parameter, different from the name.
