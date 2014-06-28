@@ -1,6 +1,9 @@
 <?php
 namespace Nap;
 
+use Nap\Serialisation;
+use Nap\Serialisation\SerialiserInterface;
+
 class Application
 {
     // Dependencies
@@ -10,9 +13,16 @@ class Application
     private $resolver;
     /** @var Controller\ControllerBuilderStrategy*/
     private $builder;
+    /** @var Application\Dispatcher */
+    private $dispatcher;
+    /** @var Application\Responder */
+    private $responder;
+    /** @var Application\ContentNegotiatorInterface */
+    private $contentNegotiator;
+
+    // Settings
     /** @var Resource\Resource[] */
     private $resources;
-
     // Configuration
     private $controllerNamespace;
 
@@ -25,24 +35,35 @@ class Application
         $this->matcher = $matcher;
         $this->resolver = $resolver;
         $this->builder = $builder;
-        $this->resources = array();
+        $this->dispatcher = new Application\Dispatcher();
+        $this->responder = new Application\Responder();
+        $this->contentNegotiator = new Application\ContentNegotiation();
 
+        $this->resources = array();
         $this->controllerNamespace = "";
+
+        $this->registerDefaultHandlers();
     }
 
     /**
-     * @param Resource\Resource[] $resources
+     * Application methods
      */
-    public function setResources(array $resources)
+
+    private function registerDefaultHandlers()
     {
-        $this->resources = $resources;
+        $this->responder->registerSerialiser(
+            "application/json",
+            new Serialisation\JSON()
+        );
     }
 
-    public function setControllerNamespace($namespace)
-    {
-        $this->controllerNamespace = $namespace;
-    }
-
+    /**
+     * Start a Nap application. Routes requests to controllers and handles response.
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @throws Resource\NoMatchingResourceException
+     * @throws Controller\InvalidControllerException
+     */
     public function start(\Symfony\Component\HttpFoundation\Request $request)
     {
         $uri = $request->getPathInfo();
@@ -59,7 +80,14 @@ class Application
             throw new \Nap\Controller\InvalidControllerException();
         }
 
-        $this->dispatchMethod($controller, $request, $matchedResource->getParameters());
+        /** @var \Nap\Controller\ResultInterface $data */
+        $data = $this->dispatcher->dispatchMethod($controller, $request, $matchedResource->getParameters());
+
+        $this->responder->respond(
+            $request,
+            $this->contentNegotiator,
+            $data
+        );
     }
 
     /**
@@ -79,45 +107,41 @@ class Application
         return null;
     }
 
-    private function dispatchMethod(
-        \Nap\Controller\NapControllerInterface $controller,
-        \Symfony\Component\HttpFoundation\Request $request,
-        array $parameters
-    ) {
-        $controllerMethodCall = function($method) use($controller, $request, $parameters){
-            $controller->{$method}($request, $parameters);
-        };
+    /**
+     * Configuration methods
+     */
 
-        $controllerIndexCall = function() use($controller, $request){
-            $controller->index($request);
-        };
+    /**
+     * @param Resource\Resource[] $resources
+     */
+    public function setResources(array $resources)
+    {
+        $this->resources = $resources;
+    }
 
-        switch(strtolower($request->getMethod()))
-        {
-            case "get":
-                if(count($parameters) === 0){
-                    $controllerIndexCall();
-                    break;
-                }
+    public function setControllerNamespace($namespace)
+    {
+        $this->controllerNamespace = $namespace;
+    }
 
-                $controllerMethodCall("get");
-                break;
+    /**
+     * @param \Nap\Application\Dispatcher $dispatcher
+     */
+    public function setDispatcher(\Nap\Application\Dispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
 
-            case "post":
-                $controllerMethodCall("post");
-                break;
+    /**
+     * @param \Nap\Application\ContentNegotiatorInterface $contentNegotiator
+     */
+    public function setContentNegotiator($contentNegotiator)
+    {
+        $this->contentNegotiator = $contentNegotiator;
+    }
 
-            case "put":
-                $controllerMethodCall("put");
-                break;
-
-            case "delete":
-                $controllerMethodCall("delete");
-                break;
-
-            case "options":
-                $controllerMethodCall("options");
-                break;
-        }
+    public function registerMimeTypeSerialiser($mimeType, SerialiserInterface $serialiser)
+    {
+        $this->responder->registerSerialiser($mimeType, $serialiser);
     }
 }
