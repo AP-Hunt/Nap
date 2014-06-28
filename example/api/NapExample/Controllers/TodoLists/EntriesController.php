@@ -2,6 +2,7 @@
 namespace NapExample\Controllers\TodoLists;
 
 use Nap\Controller\NapControllerInterface;
+use Nap\Controller\Result\Data;
 
 class EntriesController implements NapControllerInterface
 {
@@ -31,7 +32,7 @@ class EntriesController implements NapControllerInterface
         if(!isset($body["complete"]))
         {
             header("HTTP 400 Bad Request");
-            return;
+            return new Data(array());;
         }
 
         $isComplete = (strtolower($body["complete"]) == "true");
@@ -43,19 +44,20 @@ class EntriesController implements NapControllerInterface
         if($list === null)
         {
             header("HTTP 404 Not Found");
-            return;
+            return new Data(array());
         }
         $entry = $this->findEntryIndexInList($entryId, $json["todo-lists"][$list]);
         if($entry === null)
         {
             header("HTTP 404 Not Found");
-            return;
+            return new Data(array());;
         }
 
         $json["todo-lists"][$list]["items"][$entry]["complete"] = $isComplete;
-        print json_encode($json["todo-lists"][$list]["items"][$entry]);
-
         $this->writeBackToFile(DATA_PATH, $json);
+
+        return new Data($json["todo-lists"][$list]["items"][$entry]);
+
     }
 
     private function findTodoListIndex($todoId, $lists)

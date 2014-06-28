@@ -1,6 +1,8 @@
 <?php
 namespace NapExample\Controllers;
 
+use Nap\Controller\Result\Data;
+
 class TodoListsController implements \Nap\Controller\NapControllerInterface
 {
     public function index(\Symfony\Component\HttpFoundation\Request $request)
@@ -15,7 +17,7 @@ class TodoListsController implements \Nap\Controller\NapControllerInterface
             );
         }, $json["todo-lists"]);
 
-        print json_encode($output);
+        return new Data($output);
     }
 
     public function get(\Symfony\Component\HttpFoundation\Request $request, array $params)
@@ -27,11 +29,12 @@ class TodoListsController implements \Nap\Controller\NapControllerInterface
         $list = $this->findIdInTodoLists($id, $json["todo-lists"]);
         if($list != null)
         {
-            print json_encode($list);
+            return new Data($list);
         }
         else
         {
             header("HTTP 404 Not Found");
+            return new Data(array());
         }
 
     }
