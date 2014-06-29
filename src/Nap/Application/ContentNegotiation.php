@@ -8,12 +8,12 @@ namespace Nap\Application;
  */
 class ContentNegotiation implements ContentNegotiatorInterface
 {
-    /** @var    \Negotiation\Negotiator */
+    /** @var    \Negotiation\NegotiatorInterface */
     private $contentNegotiator;
 
     public function __construct()
     {
-        $this->contentNegotiator = new \Negotiation\Negotiator();
+        $this->contentNegotiator = new \Negotiation\FormatNegotiator();
     }
 
     /**
