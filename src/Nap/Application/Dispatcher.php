@@ -13,7 +13,6 @@ class Dispatcher
      */
     public function dispatchMethod(
         \Nap\Controller\NapControllerInterface $controller,
-        $methodName,
         \Symfony\Component\HttpFoundation\Request $request,
         array $parameters
     ) {
@@ -25,12 +24,14 @@ class Dispatcher
             return $controller->index($request);
         };
 
-        switch(strtolower($methodName))
+        switch(strtolower($request->getMethod()))
         {
-            case "index":
-                return $controllerIndexCall();
-                break;
             case "get":
+                if(count($parameters) === 0){
+                    return $controllerIndexCall();
+                    break;
+                }
+
                 return $controllerMethodCall("get");
                 break;
 
@@ -48,39 +49,6 @@ class Dispatcher
 
             case "options":
                 return $controllerMethodCall("options");
-                break;
-        }
-    }
-
-    public function getMethod(
-        \Symfony\Component\HttpFoundation\Request $request,
-        $numberOfParameters
-    ){
-        switch(strtolower($request->getMethod()))
-        {
-            case "get":
-                if($numberOfParameters === 0){
-                    return "index";
-                    break;
-                }
-
-                return "get";
-                break;
-
-            case "post":
-                return "post";
-                break;
-
-            case "put":
-                return "put";
-                break;
-
-            case "delete":
-                return "delete";
-                break;
-
-            case "options":
-                return "options";
                 break;
         }
     }
