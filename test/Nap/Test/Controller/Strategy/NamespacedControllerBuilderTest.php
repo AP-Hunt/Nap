@@ -1,13 +1,14 @@
 <?php
+namespace Nap\Test\Controller\Strategy;
 
 class NamespacedControllerBuilderTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var SplClassLoader */
+    /** @var \SplClassLoader */
     private $classLoader;
 
     public function setUp()
     {
-        $this->classLoader = new SplClassLoader("ControllerTest", realpath(__DIR__."/namespace/"));
+        $this->classLoader = new \SplClassLoader("ControllerTest", realpath(__DIR__."/namespace/"));
         $this->classLoader->register();
     }
 

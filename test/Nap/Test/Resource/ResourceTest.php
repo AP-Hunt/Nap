@@ -1,8 +1,9 @@
 <?php
+namespace Nap\Test\Resource;
 
 use \Nap\Resource\Parameter\Scheme;
 
-class ResourceTest extends PHPUnit_Framework_TestCase
+class ResourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @test **/
     public function CreateResource_WithName()

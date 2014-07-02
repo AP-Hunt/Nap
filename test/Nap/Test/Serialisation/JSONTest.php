@@ -1,4 +1,5 @@
 <?php
+namespace Nap\Test\Serialisation;
 
 class JSONTest extends \PHPUnit_Framework_TestCase
 {

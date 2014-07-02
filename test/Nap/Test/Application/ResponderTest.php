@@ -1,4 +1,5 @@
 <?php
+namespace Nap\Test\Application;
 
 class ResponderTest extends \PHPUnit_Framework_TestCase
 {

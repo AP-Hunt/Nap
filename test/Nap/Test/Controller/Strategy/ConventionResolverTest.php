@@ -1,6 +1,7 @@
 <?php
+namespace Nap\Test\Controller\Strategy;
 
-class ConventionResolverTest extends PHPUnit_Framework_TestCase
+class ConventionResolverTest extends \PHPUnit_Framework_TestCase
 {
     /** @var \Nap\Controller\Strategy\ConventionResolver */
     private $resolver;

@@ -1,6 +1,7 @@
 <?php
+namespace Nap\Test\Uri;
 
-require_once __DIR__."/Stubs/Stubs.php";
+use \Nap\Test\Uri\Stubs;
 
 class MatchableUriBuilderRewriteTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +22,7 @@ class MatchableUriBuilderRewriteTest extends \PHPUnit_Framework_TestCase
     public function ResourceWithNoChildren_GeneratesMatchableUriReferringToItself()
     {
         // Arrange
-        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleSelfOptionalParam());
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stubs\ParamScheme\SingleSelfOptionalParam());
         $expectedUriRegexs = array(
             "#^/resource(/(?P<id>\d+))?/?$#" => $resource
         );
@@ -34,7 +35,7 @@ class MatchableUriBuilderRewriteTest extends \PHPUnit_Framework_TestCase
     public function ResourceWithSingleSelfOptionalParameter_GeneratesUriWithOneOptionalPart()
     {
         // Arrange
-        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleSelfOptionalParam());
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stubs\ParamScheme\SingleSelfOptionalParam());
         $expectedUriRegexs = array(
             "#^/resource(/(?P<id>\d+))?/?$#"
         );
@@ -47,7 +48,7 @@ class MatchableUriBuilderRewriteTest extends \PHPUnit_Framework_TestCase
     public function ResourceWithSingleSelfRequiredParameter_GeneratesUriWithOneRequiredPart()
     {
         // Arrange
-        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme_SingleSelfRequiredParam());
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stubs\ParamScheme\SingleSelfRequiredParam());
         $expectedUriRegexs = array(
             "#^/resource(/(?P<id>\d+))/?$#"
         );
@@ -60,10 +61,10 @@ class MatchableUriBuilderRewriteTest extends \PHPUnit_Framework_TestCase
     public function ResourceWithOneSelfRequired_AndOneSelfOptionalParam_GeneratesUriWithRequiredThenOptionalPart()
     {
         // Arrange
-        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme(
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stubs\ParamScheme(
                 array(
-                    new Stub_Param("Required", true, false, "\d+", "id_1"),
-                    new Stub_Param("Optional", false, false, "\d+", "id_2")
+                    new Stubs\Param("Required", true, false, "\d+", "id_1"),
+                    new Stubs\Param("Optional", false, false, "\d+", "id_2")
                 )
             ));
         $expectedUriRegexs = array(
@@ -79,9 +80,9 @@ class MatchableUriBuilderRewriteTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $child = new \Nap\Resource\Resource("Child", "/child", null);
-        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme(
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stubs\ParamScheme(
             array(
-                new Stub_Param("Id", false, true, "\d+", "id")
+                new Stubs\Param("Id", false, true, "\d+", "id")
             )
         ), array($child));
         $expectedUriRegexs = array(
@@ -97,9 +98,9 @@ class MatchableUriBuilderRewriteTest extends \PHPUnit_Framework_TestCase
     public function ResourceWithOneChild_AndOneChildRequiredParameter_GeneratesOwnUri_AndChildUriWithRequiredParameter()
     {
         // Arrange
-        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme(
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stubs\ParamScheme(
             array(
-                new Stub_Param("Id", false, true, "\d+", "id")
+                new Stubs\Param("Id", false, true, "\d+", "id")
             )
         ), array(
             new \Nap\Resource\Resource("Child", "/child", null)
@@ -117,9 +118,9 @@ class MatchableUriBuilderRewriteTest extends \PHPUnit_Framework_TestCase
     public function ResourceWithOneChild_AndOneChildOptionalParameter_GeneratesOwnUri_AndChildUriWithOptionalParameter()
     {
         // Arrange
-        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme(
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stubs\ParamScheme(
             array(
-                new Stub_Param("Id", false, false, "\d+", "id")
+                new Stubs\Param("Id", false, false, "\d+", "id")
             )
         ), array(
             new \Nap\Resource\Resource("Child", "/child", null)
@@ -137,10 +138,10 @@ class MatchableUriBuilderRewriteTest extends \PHPUnit_Framework_TestCase
     public function ResourceWithOneChild_AndOneChildOptionalParameterAndOneChildRequiredParameter_GeneratesOwnUri_AndChildUriWithRequiredThenOptionalParameter()
     {
         // Arrange
-        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stub_ParamScheme(
+        $resource = new \Nap\Resource\Resource("Resource", "/resource", new Stubs\ParamScheme(
             array(
-                new Stub_Param("Id", false, true, "\d+", "id_req"),
-                new Stub_Param("Id2", false, false, "\d+", "id_opt")
+                new Stubs\Param("Id", false, true, "\d+", "id_req"),
+                new Stubs\Param("Id2", false, false, "\d+", "id_opt")
             )
         ), array(
             new \Nap\Resource\Resource("Child", "/child", null)

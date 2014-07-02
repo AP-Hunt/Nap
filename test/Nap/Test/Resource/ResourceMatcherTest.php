@@ -1,4 +1,5 @@
 <?php
+namespace Nap\Test\Resource;
 
 class ResourceMatcherTest extends \PHPUnit_Framework_TestCase
 {

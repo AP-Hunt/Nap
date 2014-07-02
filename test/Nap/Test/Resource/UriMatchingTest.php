@@ -1,4 +1,7 @@
 <?php
+namespace Nap\Test\Resource;
+
+use \Nap\Test\Uri\Stubs;
 
 class UriMatchingTest extends \PHPUnit_Framework_TestCase
 {
@@ -7,7 +10,7 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $uri = "/uri";
-        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleSelfRequiredIntParam());
+        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stubs\ParamScheme\SingleSelfRequiredIntParam());
 
         $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
 
@@ -23,7 +26,7 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $uri = "/uri/1";
-        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleSelfRequiredIntParam());
+        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stubs\ParamScheme\SingleSelfRequiredIntParam());
 
         $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
 
@@ -39,7 +42,7 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $uri = "/uri/asd";
-        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleSelfRequiredIntParam());
+        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stubs\ParamScheme\SingleSelfRequiredIntParam());
 
         $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
 
@@ -56,8 +59,8 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $uri = "/uri/child/1";
 
-        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleSelfRequiredIntParam("child_id"));
-        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleChildRequiredIntParam("id"), array(
+        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stubs\ParamScheme\SingleSelfRequiredIntParam("child_id"));
+        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stubs\ParamScheme\SingleChildRequiredIntParam("id"), array(
             $childResource
         ));
 
@@ -77,8 +80,8 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $uri = "/uri/1/child/1";
 
-        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleSelfRequiredIntParam("child_id"));
-        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stub_ParamScheme_SingleSelfRequiredIntParam("id"), array(
+        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stubs\ParamScheme\SingleSelfRequiredIntParam("child_id"));
+        $rootResource = new \Nap\Resource\Resource("Uri", "/uri", new Stubs\ParamScheme\SingleSelfRequiredIntParam("id"), array(
             $childResource
         ));
 
@@ -98,10 +101,10 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
         // Arrange
         $uri = "/uri/child/1";
 
-        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stub_ParamScheme_SingleSelfRequiredIntParam("child_id"));
+        $childResource = new \Nap\Resource\Resource("Child", "/child", new Stubs\ParamScheme\SingleSelfRequiredIntParam("child_id"));
 
-        $optionalParamScheme = new Stub_ParamScheme_SingleParam(
-            new Stub_IntParam("id", false, false, "\d+", "id")
+        $optionalParamScheme = new Stubs\ParamScheme\SingleParam(
+            new Stubs\IntParam("id", false, false, "\d+", "id")
         );
         $rootResource = new \Nap\Resource\Resource("Uri", "/uri", $optionalParamScheme, array(
             $childResource
