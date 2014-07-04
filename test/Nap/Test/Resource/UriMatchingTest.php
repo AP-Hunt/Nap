@@ -15,7 +15,7 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
         $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
 
         // Act
-        $matchedResource = $matcher->match($uri, $rootResource);
+        $matchedResource = $matcher->match($uri, array($rootResource));
 
         // Assert
         $this->assertNull($matchedResource);
@@ -31,7 +31,7 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
         $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
 
         // Act
-        $matchedResource = $matcher->match($uri, $rootResource);
+        $matchedResource = $matcher->match($uri, array($rootResource));
 
         // Assert
         $this->assertEquals($rootResource, $matchedResource->getResource());
@@ -47,7 +47,7 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
         $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
 
         // Act
-        $matchedResource = $matcher->match($uri, $rootResource);
+        $matchedResource = $matcher->match($uri, array($rootResource));
 
         // Assert
         $this->assertNull($matchedResource);
@@ -68,7 +68,7 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
         $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
 
         // Act
-        $matchedResource = $matcher->match($uri, $rootResource);
+        $matchedResource = $matcher->match($uri, array($rootResource));
 
         // Assert
         $this->assertNull($matchedResource);
@@ -89,7 +89,7 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
         $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
 
         // Act
-        $matchedResource = $matcher->match($uri, $rootResource);
+        $matchedResource = $matcher->match($uri, array($rootResource));
 
         // Assert
         $this->assertEquals($childResource, $matchedResource->getResource());
@@ -114,7 +114,7 @@ class UriMatchingTest extends \PHPUnit_Framework_TestCase
         $matcher = new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder());
 
         // Act
-        $matchedResource = $matcher->match($uri, $rootResource);
+        $matchedResource = $matcher->match($uri, array($rootResource));
 
         // Assert
         $this->assertEquals($childResource, $matchedResource->getResource());
