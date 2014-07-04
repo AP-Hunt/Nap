@@ -1,13 +1,15 @@
 <?php
 namespace Nap\Controller;
 
+use Nap\Resource\Resource;
+
 interface ControllerBuilderStrategy
 {
     /**
-     * Builds a Nap controller given a FQN
+     * Builds a Nap controller given a resource
      *
-     * @param   string  $controllerFQN
+     * @param   Resource $resource
      * @return  \Nap\Controller\NapControllerInterface
      */
-    public function buildController($controllerFQN);
+    public function buildController(Resource $resource);
 } 

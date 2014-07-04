@@ -7,19 +7,26 @@ class ConventionResolver implements ControllerResolutionStrategy
 {
     const NAMESPACE_SEPARATOR = "\\";
 
+    /** @var string*/
+    private $controllerNamespace;
+
+    public function __construct($controllerNamespace = null)
+    {
+        $this->controllerNamespace = $controllerNamespace ?: "";
+    }
+
     /**
      * Resolves a given resource to its controller
      *
-     * @param string                    $controllerNamespace
      * @param \Nap\Resource\Resource    $resource
      * @return string   The FQN of the resource's controller
      */
-    public function resolve($controllerNamespace, \Nap\Resource\Resource $resource)
+    public function resolve(\Nap\Resource\Resource $resource)
     {
         $resourceFolderName = $this->resolveFolderNameForResource($resource->getParent());
         $fqn = $resourceFolderName.$resource->getName()."Controller";
 
-        $controllerNamespace = $this->stripEndSlashFromNamespace($controllerNamespace);
+        $controllerNamespace = $this->stripEndSlashFromNamespace($this->controllerNamespace);
 
         return $controllerNamespace.$fqn;
     }

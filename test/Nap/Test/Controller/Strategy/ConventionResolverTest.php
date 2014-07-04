@@ -3,18 +3,6 @@ namespace Nap\Test\Controller\Strategy;
 
 class ConventionResolverTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var \Nap\Controller\Strategy\ConventionResolver */
-    private $resolver;
-
-    public function setUp()
-    {
-        $this->resolver = new \Nap\Controller\Strategy\ConventionResolver();
-    }
-
-    public function tearDown()
-    {
-        $this->resolver = null;
-    }
 
     /** @test **/
     public function AppendsControllerNamespace_ToResolvedController()
@@ -24,8 +12,10 @@ class ConventionResolverTest extends \PHPUnit_Framework_TestCase
         $resource = new \Nap\Resource\Resource("MyResource", "", null);
         $expectedFQN = "\My\Namespace\MyResourceController";
 
+        $resolver = new \Nap\Controller\Strategy\ConventionResolver($namespace);
+
         // Act
-        $fqn = $this->resolver->resolve($namespace, $resource);
+        $fqn = $resolver->resolve($resource);
 
         // Assert
         $this->assertEquals($expectedFQN, $fqn);
@@ -38,8 +28,10 @@ class ConventionResolverTest extends \PHPUnit_Framework_TestCase
         $resource = new \Nap\Resource\Resource("MyResource", "", null);
         $expectedFQN = str_replace("/", DIRECTORY_SEPARATOR, "/MyResourceController");
 
+        $resolver = new \Nap\Controller\Strategy\ConventionResolver("");
+
         // Act
-        $fqn = $this->resolver->resolve("", $resource);
+        $fqn = $resolver->resolve( $resource);
 
         // Assert
         $this->assertEquals($expectedFQN, $fqn);
@@ -53,8 +45,10 @@ class ConventionResolverTest extends \PHPUnit_Framework_TestCase
         $child->setParent(new \Nap\Resource\Resource("Parent", "", null));
         $expectedFQN = str_replace("/", DIRECTORY_SEPARATOR, "/Parent/ChildController");
 
+        $resolver = new \Nap\Controller\Strategy\ConventionResolver("");
+
         // Act
-        $fqn = $this->resolver->resolve("", $child);
+        $fqn = $resolver->resolve($child);
 
         // Assert
         $this->assertEquals($expectedFQN, $fqn);
@@ -74,8 +68,10 @@ class ConventionResolverTest extends \PHPUnit_Framework_TestCase
 
         $expectedFQN = str_replace("/", DIRECTORY_SEPARATOR, "/Grandparent/Parent/ChildController");
 
+        $resolver = new \Nap\Controller\Strategy\ConventionResolver("");
+
         // Act
-        $fqn = $this->resolver->resolve("", $child);
+        $fqn = $resolver->resolve($child);
 
         // Assert
         $this->assertEquals($expectedFQN, $fqn);
