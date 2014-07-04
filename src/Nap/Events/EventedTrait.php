@@ -15,7 +15,7 @@ trait EventedTrait
         $this->_eventDispatcher = $dispatcher;
     }
 
-    public function dispatchEvent($eventName, Event $eventData)
+    protected function dispatchEvent($eventName, Event $eventData)
     {
         if($this->_eventDispatcher !== null)
         {
