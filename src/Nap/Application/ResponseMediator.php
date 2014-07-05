@@ -5,6 +5,7 @@ use Nap\Events\ActionDispatcherEvents;
 use Nap\Events\ResourceMatchingEvents;
 use Nap\Response\HeaderResultsInterface;
 use Nap\Response\Responder;
+use Nap\Response\Result\HTTP\ContentType;
 use Nap\Response\Result\HTTP\NotAcceptable;
 use Nap\Response\Result\HTTP\NotFound;
 use Nap\Response\Result\HTTP\OK;
@@ -78,7 +79,10 @@ class ResponseMediator implements EventSubscriberInterface
             );
         }
 
-        $headers = new OK($controllerExecutedEvent->getResult());
+        $headers = new ContentType(
+            new OK($controllerExecutedEvent->getResult()),
+            $controllerExecutedEvent->getMimeType()
+        );
 
         $this->sendResponse(
             $headers,
