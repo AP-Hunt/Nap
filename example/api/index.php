@@ -11,18 +11,17 @@ $loader->register();
 
 // Application bootstrapping
 $req = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+$resources = require_once(APPLICATION_PATH."/NapExample/resources.php");
 
-$app = new \Nap\Application(
-    new \Nap\Resource\ResourceMatcher(new \Nap\Uri\MatchableUriBuilder()),
-    new \Nap\Controller\Strategy\ConventionResolver(),
-    new \Nap\Controller\Strategy\NamespacedControllerBuilder()
-);
-$app->setResources(require_once(APPLICATION_PATH."/NapExample/resources.php"));
-$app->setControllerNamespace("\NapExample\Controllers");
+$builder = new \Nap\ApplicationBuilder();
+$builder->registerSerialiser("application/json", new \Nap\Serialisation\JSON());
+$builder->setControllerNamespace("NapExample\Controllers");
+
+$app = $builder->build();
 
 try
 {
-    $app->start($req);
+    $app->start($req, $resources);
 }
 catch (\Nap\Resource\NoMatchingResourceException $ex)
 {
