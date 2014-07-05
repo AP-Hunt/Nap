@@ -57,4 +57,15 @@ class ConventionResolver implements ControllerResolutionStrategy
 
         return $namespace;
     }
+
+    /**
+     * Set the root namespace for resolving controllers
+     *
+     * @param   string $FQN
+     * @return  void
+     */
+    public function setControllerRootNamesapce($FQN)
+    {
+        $this->controllerNamespace = $FQN;
+    }
 }

@@ -1,147 +1,79 @@
 <?php
 namespace Nap;
 
-use Nap\Serialisation;
-use Nap\Serialisation\SerialiserInterface;
+
+use Nap\Application\ActionDispatcher;
+use Nap\Application\ResourceMatchMediator;
+use Nap\Application\ResponseMediator;
+use Nap\Events\ResourceMatchingEvents;
+use Nap\Resource\ResourceMatcher;
+use Nap\Response\Responder;
+use Nap\Serialisation\SerialiserRegistry;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\Request;
 
 class Application
 {
-    // Dependencies
+    /** @var \Symfony\Component\EventDispatcher\EventDispatcher */
+    private $eventDispatcher;
+
     /** @var Resource\ResourceMatcher */
     private $matcher;
-    /** @var Controller\ControllerResolutionStrategy */
-    private $resolver;
-    /** @var Controller\ControllerBuilderStrategy*/
-    private $builder;
-    /** @var Application\Dispatcher */
-    private $dispatcher;
-    /** @var Application\Responder */
-    private $responder;
-    /** @var Application\ContentNegotiatorInterface */
-    private $contentNegotiator;
 
-    // Settings
-    /** @var Resource\Resource[] */
-    private $resources;
-    // Configuration
-    private $controllerNamespace;
+    /** @var Application\ActionDispatcher */
+    private $actionDispatcher;
+
+    /** @var Response\Responder */
+    private $responder;
+
+    /** @var ResponseMediator */
+    private $responseMediator;
+
+    /** @var ResourceMatchMediator  */
+    private $resourceMatchMediator;
+
+    /** @var Serialisation\SerialiserRegistry */
+    private $serialiserRegistry;
 
     public function __construct(
-        \Nap\Resource\ResourceMatcher $matcher,
-        \Nap\Controller\ControllerResolutionStrategy $resolver,
-        \Nap\Controller\ControllerBuilderStrategy $builder
-    ) {
+        EventDispatcher $eventDispatcher,
+        ResourceMatcher $matcher,
+        ActionDispatcher $actionDispatcher,
+        SerialiserRegistry $serialiserRegistry,
+        Responder $responder
+     ) {
+        $this->eventDispatcher = $eventDispatcher;
 
         $this->matcher = $matcher;
-        $this->resolver = $resolver;
-        $this->builder = $builder;
-        $this->dispatcher = new Application\Dispatcher();
-        $this->responder = new Application\Responder();
-        $this->contentNegotiator = new Application\ContentNegotiation();
+        $this->actionDispatcher = $actionDispatcher;
+        $this->responder = $responder;
+        $this->serialiserRegistry = $serialiserRegistry;
 
-        $this->resources = array();
-        $this->controllerNamespace = "";
+        $this->actionDispatcher->setEventDispatcher($this->eventDispatcher);
+        $this->matcher->setEventDispatcher($this->eventDispatcher);
 
-        $this->registerDefaultHandlers();
-    }
-
-    /**
-     * Application methods
-     */
-
-    private function registerDefaultHandlers()
-    {
-        $this->responder->registerSerialiser(
-            "application/json",
-            new Serialisation\JSON()
+        $this->responseMediator = new ResponseMediator(
+            $this->responder,
+            $this->serialiserRegistry
         );
+
+        $this->resourceMatchMediator = new ResourceMatchMediator($this->actionDispatcher);
+
+        $this->eventDispatcher->addSubscriber($this->responseMediator);
+        $this->eventDispatcher->addSubscriber($this->resourceMatchMediator);
     }
 
     /**
-     * Start a Nap application. Routes requests to controllers and handles response.
+     * Starts the application, matching the URI to a resource and generating a response
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @throws Resource\NoMatchingResourceException
-     * @throws Controller\InvalidControllerException
+     * @param Request       $request
+     * @param Resource[]    $resources
      */
-    public function start(\Symfony\Component\HttpFoundation\Request $request)
+    public function start(Request $request, array $resources)
     {
-        $uri = $request->getPathInfo();
+        $this->resourceMatchMediator->setRequest($request);
 
-        $matchedResource = $this->findResourceForUri($uri);
-        if($matchedResource === null){
-            throw new \Nap\Resource\NoMatchingResourceException();
-        }
-
-        $controllerPath = $this->resolver->resolve($this->controllerNamespace, $matchedResource->getResource());
-        $controller = $this->builder->buildController($controllerPath);
-
-        if(!($controller instanceof \Nap\Controller\NapControllerInterface)){
-            throw new \Nap\Controller\InvalidControllerException();
-        }
-
-        /** @var \Nap\Controller\ResultInterface $data */
-        $data = $this->dispatcher->dispatchMethod($controller, $request, $matchedResource->getParameters());
-
-        $this->responder->respond(
-            $request,
-            $this->contentNegotiator,
-            $data
-        );
-    }
-
-    /**
-     * @param $uri
-     * @return Resource\MatchedResource|null
-     */
-    private function findResourceForUri($uri)
-    {
-        foreach($this->resources as $root)
-        {
-            $r = $this->matcher->match($uri, $root);
-            if($r !== null){
-                return $r;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Configuration methods
-     */
-
-    /**
-     * @param Resource\Resource[] $resources
-     */
-    public function setResources(array $resources)
-    {
-        $this->resources = $resources;
-    }
-
-    public function setControllerNamespace($namespace)
-    {
-        $this->controllerNamespace = $namespace;
-    }
-
-    /**
-     * @param \Nap\Application\Dispatcher $dispatcher
-     */
-    public function setDispatcher(\Nap\Application\Dispatcher $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
-    }
-
-    /**
-     * @param \Nap\Application\ContentNegotiatorInterface $contentNegotiator
-     */
-    public function setContentNegotiator($contentNegotiator)
-    {
-        $this->contentNegotiator = $contentNegotiator;
-    }
-
-    public function registerMimeTypeSerialiser($mimeType, SerialiserInterface $serialiser)
-    {
-        $this->responder->registerSerialiser($mimeType, $serialiser);
+        // Kicks off the chain of events leading to a response
+        $this->matcher->match($request->getPathInfo(), $resources);
     }
 }

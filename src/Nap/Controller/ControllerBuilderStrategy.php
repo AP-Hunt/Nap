@@ -12,4 +12,12 @@ interface ControllerBuilderStrategy
      * @return  \Nap\Controller\NapControllerInterface
      */
     public function buildController(Resource $resource);
+
+    /**
+     * Set the root namespace for controllers
+     *
+     * @param   string    $FQN
+     * @return  void
+     */
+    public function setControllerRootNamesapce($FQN);
 } 

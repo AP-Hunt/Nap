@@ -27,4 +27,15 @@ class NamespacedControllerBuilder implements \Nap\Controller\ControllerBuilderSt
         $controllerFQN = $this->resolver->resolve($resource);
         return new $controllerFQN();
     }
+
+    /**
+     * Set the root namespace for controllers
+     *
+     * @param   string $FQN
+     * @return  void
+     */
+    public function setControllerRootNamesapce($FQN)
+    {
+        $this->resolver->setControllerRootNamesapce($FQN);
+    }
 }
