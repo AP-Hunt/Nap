@@ -346,6 +346,6 @@ class ActionDispatcherTest extends \PHPUnit_Framework_TestCase
 
         $controller->expects($this->once())
                 ->method($method)
-                ->will($this->returnValue($this->getMock("\Nap\Controller\ResultInterface")));
+                ->will($this->returnValue($this->getMock("\Nap\Response\ResultBase")));
     }
 } 

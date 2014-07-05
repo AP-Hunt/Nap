@@ -1,26 +1,21 @@
 <?php
 namespace Nap\Events\ActionDispatcher;
 
-use Nap\Controller\ResultInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Nap\Events\ResultEvent;
+use Nap\Response\ResultBase;
 
-class ControllerExecutedEvent extends Event
+class ControllerExecutedEvent extends ResultEvent
 {
-
-    /**
-     * @var \Nap\Controller\ResultInterface
-     */
-    private $result;
     /**
      * @var string
      */
     private $mimeType;
 
     public function __construct(
-        ResultInterface $result,
+        ResultBase $result,
         $mimeType
     ) {
-        $this->result = $result;
+        $this->setResult($result);
         $this->mimeType = $mimeType;
     }
 
@@ -31,14 +26,4 @@ class ControllerExecutedEvent extends Event
     {
         return $this->mimeType;
     }
-
-    /**
-     * @return \Nap\Controller\ResultInterface
-     */
-    public function getResult()
-    {
-        return $this->result;
-    }
-
-
 }

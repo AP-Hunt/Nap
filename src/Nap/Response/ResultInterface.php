@@ -1,5 +1,5 @@
 <?php
-namespace Nap\Controller;
+namespace Nap\Response;
 
 
 interface ResultInterface

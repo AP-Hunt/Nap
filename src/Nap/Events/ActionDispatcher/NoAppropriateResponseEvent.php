@@ -1,9 +1,8 @@
 <?php
 namespace Nap\Events\ActionDispatcher;
 
-use Symfony\Component\EventDispatcher\Event;
+use Nap\Events\ResultEvent;
 
-class NoAppropriateResponseEvent extends Event
+class NoAppropriateResponseEvent extends ResultEvent
 {
-
 } 

@@ -2,7 +2,7 @@
 namespace Nap\Application;
 
 
-use Nap\Controller\ResultInterface;
+use Nap\Response\ResultInterface;
 use Nap\Events\ActionDispatcherEvents;
 use Nap\Metadata\ControllerMetadataProvider;
 use Nap\Resource\MatchedResource;

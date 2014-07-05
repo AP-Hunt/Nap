@@ -1,9 +1,9 @@
 <?php
 namespace Nap\Events\ResourceMatching;
 
-use Symfony\Component\EventDispatcher\Event;
+use Nap\Events\ResultEvent;
 
-class ResourceNotMatchedEvent extends Event
+class ResourceNotMatchedEvent extends ResultEvent
 {
     /** @var string */
     private $uri;
