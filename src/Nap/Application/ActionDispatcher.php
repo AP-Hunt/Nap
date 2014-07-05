@@ -2,7 +2,7 @@
 namespace Nap\Application;
 
 
-use Nap\Response\ResultInterface;
+use Nap\Response\BodyResultInterface;
 use Nap\Events\ActionDispatcherEvents;
 use Nap\Metadata\ControllerMetadataProvider;
 use Nap\Resource\MatchedResource;
@@ -151,7 +151,7 @@ class ActionDispatcher
      * @param   \Nap\Controller\NapControllerInterface    $controller
      * @param   Request                                   $request
      * @param   array $parameters
-     * @return  ResultInterface
+     * @return  BodyResultInterface
      */
     private function callControllerMethod(
         $controllerMethod,

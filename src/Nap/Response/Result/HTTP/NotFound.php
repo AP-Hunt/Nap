@@ -3,12 +3,10 @@ namespace Nap\Response\Result\HTTP;
 
 
 use Nap\Response\HeaderResultsInterface;
-use Nap\Response\ResultBase;
 use Symfony\Component\HttpFoundation\Response;
 
-class NotFound extends ResultBase implements HeaderResultsInterface
+class NotFound implements HeaderResultsInterface
 {
-
     /**
      * @var \Nap\Response\HeaderResultsInterface
      */
@@ -33,15 +31,5 @@ class NotFound extends ResultBase implements HeaderResultsInterface
         {
             $this->headerResults->setHeadersOnResponse($response);
         }
-    }
-
-    /**
-     * Gets response data
-     *
-     * @return  array
-     */
-    public function getData()
-    {
-        return array();
     }
 }

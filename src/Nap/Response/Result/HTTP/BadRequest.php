@@ -4,7 +4,7 @@ namespace Nap\Response\Result\HTTP;
 use Nap\Response\HeaderResultsInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class OK implements HeaderResultsInterface
+class BadRequest implements HeaderResultsInterface
 {
     /**
      * @var \Nap\Response\HeaderResultsInterface
@@ -24,10 +24,8 @@ class OK implements HeaderResultsInterface
      */
     public function setHeadersOnResponse(Response $response)
     {
-        $response->setStatusCode(200);
-
-        if($this->headers != null)
-        {
+        $response->setStatusCode(400);
+        if($this->headers != null) {
             $this->headers->setHeadersOnResponse($response);
         }
     }

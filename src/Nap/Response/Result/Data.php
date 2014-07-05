@@ -2,10 +2,9 @@
 namespace Nap\Response\Result;
 
 
-use Nap\Response\ResultBase;
-use Symfony\Component\HttpFoundation\Response;
+use Nap\Response\BodyResultInterface;
 
-class Data extends ResultBase
+class Data implements BodyResultInterface
 {
 
     /**
@@ -26,16 +25,5 @@ class Data extends ResultBase
     public function getData()
     {
         return $this->data;
-    }
-
-    /**
-     * Sets headers (including cookies and cache) on the response
-     *
-     * @param   Response $response
-     * @return  void
-     */
-    public function setHeadersOnResponse(Response $response)
-    {
-        // Does nothing
     }
 }

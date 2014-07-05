@@ -344,8 +344,11 @@ class ActionDispatcherTest extends \PHPUnit_Framework_TestCase
                 ->method("buildController")
                 ->will($this->returnValue($controller));
 
+        $actionResult = $this->getMockBuilder("\Nap\Response\ActionResult")
+                            ->disableOriginalConstructor()->getMock();
+
         $controller->expects($this->once())
                 ->method($method)
-                ->will($this->returnValue($this->getMock("\Nap\Response\ResultBase")));
+                ->will($this->returnValue($actionResult));
     }
 } 

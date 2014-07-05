@@ -3,10 +3,9 @@
 namespace Nap\Response\Result\HTTP;
 
 use Nap\Response\HeaderResultsInterface;
-use Nap\Response\ResultBase;
 use Symfony\Component\HttpFoundation\Response;
 
-class NotAcceptable extends ResultBase implements HeaderResultsInterface
+class NotAcceptable implements HeaderResultsInterface
 {
     /**
      * @var \Nap\Response\HeaderResultsInterface
@@ -30,15 +29,5 @@ class NotAcceptable extends ResultBase implements HeaderResultsInterface
         {
             $this->headerResults->setHeadersOnResponse($response);
         }
-    }
-
-    /**
-     * Gets response data
-     *
-     * @return  array
-     */
-    public function getData()
-    {
-        return array();
     }
 }

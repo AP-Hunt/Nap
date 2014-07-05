@@ -71,6 +71,9 @@ class ResponseMediator implements EventSubscriberInterface
 
     public function validResponse(\Nap\Events\ActionDispatcher\ControllerExecutedEvent $controllerExecutedEvent)
     {
+        $headers = $controllerExecutedEvent->getResult()->getHeaders();
+        $body = $controllerExecutedEvent->getResult()->getData();
+
         $serialiser = $this->serialiserRegistry->getSerialiser($controllerExecutedEvent->getMimeType());
         if($serialiser === null)
         {
@@ -80,13 +83,13 @@ class ResponseMediator implements EventSubscriberInterface
         }
 
         $headers = new ContentType(
-            new OK($controllerExecutedEvent->getResult()),
+            new OK($headers),
             $controllerExecutedEvent->getMimeType()
         );
 
         $this->sendResponse(
             $headers,
-            $serialiser->serialise($controllerExecutedEvent->getResult()->getData())
+            $serialiser->serialise($body->getData())
         );
     }
 

@@ -2,7 +2,7 @@
 namespace Nap\Events\ActionDispatcher;
 
 use Nap\Events\ResultEvent;
-use Nap\Response\ResultBase;
+use Nap\Response\ActionResult;
 
 class ControllerExecutedEvent extends ResultEvent
 {
@@ -12,7 +12,7 @@ class ControllerExecutedEvent extends ResultEvent
     private $mimeType;
 
     public function __construct(
-        ResultBase $result,
+        ActionResult $result,
         $mimeType
     ) {
         $this->setResult($result);

@@ -2,9 +2,11 @@
 namespace Nap\Test\Application;
 
 
+use Nap\Response\ActionResult;
 use Nap\Response\Result\Data;
 use Nap\Events\ActionDispatcher\NoAppropriateResponseEvent;
 use Nap\Events\ResourceMatching\ResourceNotMatchedEvent;
+use Nap\Response\Result\HTTP\OK;
 use Nap\Serialisation\SerialiserRegistry;
 
 class ResponseMediatorTest extends \PHPUnit_Framework_TestCase
@@ -65,7 +67,7 @@ class ResponseMediatorTest extends \PHPUnit_Framework_TestCase
     }
     
     /** @test **/
-    public function validResponse_WritesSerialisedFormAndOKHeaders()
+    public function validResponse_WritesSerialisedFormAndHeaders()
     {
         // Arrange
         $this->serialiserRegistry->registerSerialiser(
@@ -74,14 +76,17 @@ class ResponseMediatorTest extends \PHPUnit_Framework_TestCase
         );
 
         $event = new \Nap\Events\ActionDispatcher\ControllerExecutedEvent(
-            new Data(array()),
+            new ActionResult(
+                new OK(),
+                new Data(array())
+            ),
             "application/test"
         );
 
         $this->responder->expects($this->once())
                 ->method("writeResponse")
                 ->with(
-                    $this->isInstanceOf("\Nap\Response\Result\HTTP\OK"),
+                    $this->isInstanceOf("\Nap\Response\HeaderResultsInterface"),
                     "serialised" // Value from stub
                 );
 
@@ -97,9 +102,10 @@ class ResponseMediatorTest extends \PHPUnit_Framework_TestCase
     {
         // Arrange
         $event = new \Nap\Events\ActionDispatcher\ControllerExecutedEvent(
-            new Data(array()),
+            new ActionResult(new OK(),new Data(array())),
             "application/test"
         );
+
 
         // Act
         $this->mediator->validResponse($event);

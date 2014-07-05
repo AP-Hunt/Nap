@@ -2,7 +2,7 @@
 namespace Nap\Response;
 
 
-interface ResultInterface
+interface BodyResultInterface
 {
     /**
      * Gets response data

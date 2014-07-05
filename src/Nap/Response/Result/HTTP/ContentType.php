@@ -2,10 +2,9 @@
 namespace Nap\Response\Result\HTTP;
 
 use Nap\Response\HeaderResultsInterface;
-use Nap\Response\ResultBase;
 use Symfony\Component\HttpFoundation\Response;
 
-class ContentType extends ResultBase implements HeaderResultsInterface
+class ContentType implements HeaderResultsInterface
 {
     /**
      * @var \Nap\Response\HeaderResultsInterface
@@ -32,15 +31,5 @@ class ContentType extends ResultBase implements HeaderResultsInterface
     {
         $response->headers->set("Content-Type", $this->mimeType);
         $this->headers->setHeadersOnResponse($response);
-    }
-
-    /**
-     * Gets response data
-     *
-     * @return  array
-     */
-    public function getData()
-    {
-        return array();
     }
 }
