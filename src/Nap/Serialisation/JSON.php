@@ -7,10 +7,10 @@ class JSON implements SerialiserInterface
     /**
      * Serialises the input data
      *
-     * @param   array $data
+     * @param   mixed $data
      * @return  string
      */
-    public function serialise(array $data)
+    public function serialise($data)
     {
         return json_encode($data);
     }
