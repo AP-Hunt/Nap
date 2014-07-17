@@ -55,7 +55,7 @@ class ResourceMatchMediator implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            ResourceMatchingEvents::RESOURCE_MATCHED => array("resourceMatched")
+            ResourceMatchingEvents::RESOURCE_MATCHED => array("resourceMatched", 999)
         );
     }
 

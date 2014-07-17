@@ -70,7 +70,7 @@ class ApplicationBuilder
         );
 
         $this->responder = new Responder(
-            Response::create()
+            new Response()
         );
 
         $this->serialiserRegistry = new SerialiserRegistry();
