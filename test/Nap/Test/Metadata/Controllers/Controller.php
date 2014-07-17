@@ -18,7 +18,7 @@ class Controller implements \Nap\Controller\NapControllerInterface
      * @Nap\Accept({"application/index"})
      * @Nap\DefaultMime("default/index")
      */
-    public function index(\Symfony\Component\HttpFoundation\Request $request)
+    public function index(\Symfony\Component\HttpFoundation\Request $request, array $params)
     {
         // TODO: Implement index() method.
     }

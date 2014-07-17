@@ -4,7 +4,7 @@ namespace Nap\Test\Metadata\Controllers;
 class ControllerWithoutAnnotations implements \Nap\Controller\NapControllerInterface
 {
 
-    public function index(\Symfony\Component\HttpFoundation\Request $request)
+    public function index(\Symfony\Component\HttpFoundation\Request $request, array $params)
     {
         // TODO: Implement index() method.
     }
