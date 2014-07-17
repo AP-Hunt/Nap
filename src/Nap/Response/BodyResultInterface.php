@@ -7,7 +7,7 @@ interface BodyResultInterface
     /**
      * Gets response data
      *
-     * @return  array
+     * @return  mixed
      */
     public function getData();
 } 

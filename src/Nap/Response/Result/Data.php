@@ -8,11 +8,11 @@ class Data implements BodyResultInterface
 {
 
     /**
-     * @var array
+     * @var mixed
      */
     private $data;
 
-    public function __construct(array $data)
+    public function __construct($data)
     {
         $this->data = $data;
     }
@@ -20,7 +20,7 @@ class Data implements BodyResultInterface
     /**
      * Gets response data
      *
-     * @return  array
+     * @return  mixed
      */
     public function getData()
     {
